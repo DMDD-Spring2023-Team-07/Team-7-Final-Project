@@ -120,7 +120,77 @@ ADD CONSTRAINT App_ID_FK_2 foreign key (App_ID) references APPLICATION(App_ID);
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+-- DROP TABLE ADVERTISEMENT;
+-- DROP TABLE SUBSCRIPTION;
+-- DROP TABLE APPLICATION;
+-- DROP TABLE DEVELOPER;
+-- DROP TABLE APP_CATEGORY;
 
+--------------------------------------------------------------------------------
+-- RUN THIS AFTER USER_INFO CREATED
+---------------------------------------------
+CREATE TABLE DEVELOPER (
+	Developer_ID INTEGER NOT NULL,
+	Developer_Name VARCHAR(255) NOT NULL,
+	Developer_Email VARCHAR(255) NOT NULL,
+	Developer_Password VARCHAR(255) NOT NULL,
+	Organization_Name VARCHAR(255) NOT NULL,
+	License_Number INTEGER NOT NULL,
+	License_Description VARCHAR(4000) NOT NULL,
+	License_Date DATE NOT NULL,
+	CONSTRAINT Developer_ID_PK Primary Key (Developer_ID)
+);
+---------------------------------------------
+CREATE TABLE APP_CATEGORY (
+	Category_ID INTEGER NOT NULL,
+	Category_Description VARCHAR(255) NOT NULL,
+	Category_Type VARCHAR(255) NOT NULL,
+	Number_Of_Apps INTEGER NOT NULL,
+	CONSTRAINT Category_ID_PK Primary Key (Category_ID)
+);
+---------------------------------------------
+CREATE TABLE APPLICATION (
+	App_ID INTEGER NOT NULL,
+	Developer_ID INTEGER NOT NULL,
+	Category_ID INTEGER NOT NULL,
+	App_Name VARCHAR(255) NOT NULL,
+	App_Size INTEGER NOT NULL,
+	App_Version INTEGER NOT NULL,
+	App_Language VARCHAR(255) NOT NULL,
+	Download_Count INTEGER NOT NULL,
+	Target_Age INTEGER NOT NULL,
+	Supported_OS VARCHAR(255) NOT NULL,
+	Overall_Rating INTEGER NOT NULL,
+    APP_CREATE_DT DATE NOT NULL,
+	CONSTRAINT App_ID_PK Primary Key (App_ID),
+	CONSTRAINT APPLICATION_FK1 Foreign Key (Developer_ID) references DEVELOPER(Developer_ID),
+	CONSTRAINT APPLICATION_FK2 Foreign Key (Category_ID) references APP_CATEGORY(CATEGORY_ID)
+);
+---------------------------------------------
+CREATE TABLE ADVERTISEMENT (
+	Ad_ID INTEGER NOT NULL,
+	Developer_ID INTEGER NOT NULL,
+	App_ID INTEGER NOT NULL,
+	Ad_Details VARCHAR(255) NOT NULL,
+	Ad_Cost DECIMAL NOT NULL,
+	CONSTRAINT Ad_ID_PK Primary Key (Ad_ID),
+	CONSTRAINT ADVERTISEMENT_FK1 Foreign Key (Developer_ID) references DEVELOPER(Developer_ID),
+	CONSTRAINT ADVERTISEMENT_FK2 Foreign Key (APP_ID) references APPLICATION(APP_ID)
+);
+---------------------------------------------
+CREATE TABLE SUBSCRIPTION (
+	Subscription_ID INTEGER NOT NULL,
+	App_ID INTEGER NOT NULL,
+	User_ID INTEGER NOT NULL,
+	Subscription_Name VARCHAR(255) NOT NULL,
+	Type VARCHAR(255) NOT NULL CONSTRAINT CHECK_CONSTRAINT_TYPE CHECK(TYPE IN ('One Time', 'Recurring')),
+	Subcription_Start_Dt DATE NOT NULL,
+	Subscription_End_Dt DATE NOT NULL,
+	Subscription_Amount DECIMAL NOT NULL,
+	CONSTRAINT Subscription_ID_PK Primary Key (Subscription_ID),
+	CONSTRAINT SUBSCRIPTION_FK1 Foreign Key (APP_ID) references APPLICATION(APP_ID),
+	CONSTRAINT SUBSCRIPTION_FK2 Foreign Key (User_ID) references USER_INFO(User_ID)
+);
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Insert for "Pincode"
@@ -242,7 +312,7 @@ INSERT INTO APPLICATION (App_ID, Developer_ID, Category_ID, App_Name, App_Size, 
 VALUES (504, 4, 104, 'Snapchat', 200, 3, 'English', 3000, 16, 'iOS', 7, TO_DATE('2022-07-18', 'YYYY-MM-DD'));
 
 INSERT INTO APPLICATION (App_ID, Developer_ID, Category_ID, App_Name, App_Size, App_Version, App_Language, Download_Count, Target_Age, Supported_OS, Overall_Rating, APP_CREATE_DT)
-VALUES (505, 5, 105, 'Toppings', 70, 5, 'English', 90000, 24, 'iOS', 8, TO_DATE('202-03-05', 'YYYY-MM-DD'));
+VALUES (505, 5, 105, 'Toppings', 70, 5, 'English', 90000, 24, 'iOS', 8, TO_DATE('2022-03-05', 'YYYY-MM-DD'));
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Insert into REVIEWS
@@ -300,6 +370,20 @@ VALUES (605, 5, 505, 'Travel ad', 20.00);
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- Insert into SUBSCRIPTION
+INSERT INTO SUBSCRIPTION (Subscription_ID, App_ID, User_ID, Subscription_Name, Type, Subcription_Start_Dt, Subscription_End_Dt, Subscription_Amount)
+VALUES (701, 501, 1, 'Basic Plan', 'Recurring', TO_DATE('2022-03-01', 'YYYY-MM-DD'), TO_DATE('2022-04-01', 'YYYY-MM-DD'), 20.00);
+	   
+INSERT INTO SUBSCRIPTION (Subscription_ID, App_ID, User_ID, Subscription_Name, Type, Subcription_Start_Dt, Subscription_End_Dt, Subscription_Amount)
+VALUES (702, 502, 2, 'Preminum Plan', 'Recurring', TO_DATE('2022-04-01', 'YYYY-MM-DD'), TO_DATE('2022-07-01', 'YYYY-MM-DD'), 60.00);
+
+INSERT INTO SUBSCRIPTION (Subscription_ID, App_ID, User_ID, Subscription_Name, Type, Subcription_Start_Dt, Subscription_End_Dt, Subscription_Amount)
+VALUES (703, 503, 3, 'Basic Plan', 'Recurring', TO_DATE('2022-05-01', 'YYYY-MM-DD'), TO_DATE('2022-06-01', 'YYYY-MM-DD'), 20.00);
+
+INSERT INTO SUBSCRIPTION (Subscription_ID, App_ID, User_ID, Subscription_Name, Type, Subcription_Start_Dt, Subscription_End_Dt, Subscription_Amount)
+VALUES (704, 504, 4, 'Family Plan', 'Recurring', TO_DATE('2022-06-01', 'YYYY-MM-DD'), TO_DATE('2022-08-01', 'YYYY-MM-DD'), 40.00);
+
+INSERT INTO SUBSCRIPTION (Subscription_ID, App_ID, User_ID, Subscription_Name, Type, Subcription_Start_Dt, Subscription_End_Dt, Subscription_Amount)
+VALUES (705, 505, 5, 'Basic Plan', 'Recurring', TO_DATE('2022-07-01', 'YYYY-MM-DD'), TO_DATE('2022-08-01', 'YYYY-MM-DD'), 20.00);
 
 
 
@@ -337,35 +421,6 @@ VALUES (605, 5, 505, 'Travel ad', 20.00);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-SELECT * FROM PAYMENTS;
-
-SELECT * FROM ADVERTISEMENT;
-
-
-SELECT owner, table_name
-FROM all_tables
-WHERE table_name LIKE 'DEVELOPER%'
-
-DROP TABLE APP_CATEGORY_TABLE;
 
 
 
