@@ -81,7 +81,7 @@ MODIFY
     
    
     
--- DEVELOPER Table
+-- PAYMENTS Table
 
 CREATE TABLE payments (
     billing_id   INT PRIMARY KEY,
@@ -174,7 +174,7 @@ MODIFY
 MODIFY
     profile_type NOT NULL
 MODIFY
-    created_at NOT NULL
+    created_at NOT NULL;
 
 
 
