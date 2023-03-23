@@ -44,84 +44,159 @@ END;
 
 -------------- CREATE VIEWS ---------------
 --------------------------------------------------------------------------------
-CREATE VIEW APP_STORE_APP_OVERVIEW (CATEGORY_TYPE, OVERALL_RATING, CREATE_DATE, TOTAL_APPS) AS
-SELECT CATEGORY_TYPE, 
-        OVERALL_RATING,
-        TRUNC(APP_CREATE_DT) CREATE_DATE, 
-		COUNT(DISTINCT APP_ID) TOTAL_APPS
-FROM APPLICATION A
-JOIN APP_CATEGORY B ON A.CATEGORY_ID = B.CATEGORY_ID
-GROUP BY CATEGORY_TYPE, OVERALL_RATING, TRUNC(APP_CREATE_DT)
-;
+CREATE VIEW app_store_app_overview (
+    category_type,
+    overall_rating,
+    create_date,
+    total_apps
+) AS
+    SELECT
+        category_type,
+        overall_rating,
+        trunc(app_create_dt)   create_date,
+        COUNT(DISTINCT app_id) total_apps
+    FROM
+             application a
+        JOIN app_category b ON a.category_id = b.category_id
+    GROUP BY
+        category_type,
+        overall_rating,
+        trunc(app_create_dt);
 --------------------------------------------------------------------------------
-CREATE VIEW APP_STORE_USER_USAGE (CREATE_DATE, COUNTRY, TOTAL, COUNT_TYPE) AS
-SELECT TRUNC(A.CREATED_AT) CREATE_DATE,
-        B.COUNTRY,
-		COUNT(DISTINCT A.USER_ID) TOTAL,
-        'USERS' COUNT_TYPE
-FROM USER_INFO A
-JOIN PINCODE B ON A.USER_ZIP_CODE = B.ZIP_CODE
-GROUP BY TRUNC(A.CREATED_AT), B.COUNTRY, 'USERS'
-UNION ALL
-SELECT TRUNC(C.CREATED_AT) CREATE_DATE,
-        B.COUNTRY,
-		COUNT(DISTINCT C.PROFILE_ID) TOTAL,
-        'PROFILES' COUNT_TYPE
-FROM USER_INFO A
-JOIN PINCODE B ON A.USER_ZIP_CODE = B.ZIP_CODE
-JOIN PROFILE C ON A.USER_ID = C.USER_ID
-GROUP BY TRUNC(c.CREATED_AT), B.COUNTRY, 'PROFILES'
-;
+CREATE VIEW app_store_user_usage (
+    create_date,
+    country,
+    total,
+    count_type
+) AS
+    SELECT
+        trunc(a.created_at)       create_date,
+        b.country,
+        COUNT(DISTINCT a.user_id) total,
+        'USERS'                   count_type
+    FROM
+             user_info a
+        JOIN pincode b ON a.user_zip_code = b.zip_code
+    GROUP BY
+        trunc(a.created_at),
+        b.country,
+        'USERS'
+    UNION ALL
+    SELECT
+        trunc(c.created_at)          create_date,
+        b.country,
+        COUNT(DISTINCT c.profile_id) total,
+        'PROFILES'                   count_type
+    FROM
+             user_info a
+        JOIN pincode b ON a.user_zip_code = b.zip_code
+        JOIN profile c ON a.user_id = c.user_id
+    GROUP BY
+        trunc(c.created_at),
+        b.country,
+        'PROFILES';
 --------------------------------------------------------------------------------
-CREATE VIEW USER_APP_DASHBOARD (USER_ID, TOTAL_PROFILES, TOTAL_APPS, TOTAL_SIZE, TOTAL_REVIEWS, TOTAL_SUBSCRIPTIONS) AS
-SELECT A.USER_ID,
-        COUNT(DISTINCT B.PROFILE_ID) TOTAL_PROFILES,
-        COUNT(DISTINCT D.APP_ID) TOTAL_APPS,
-        SUM(D.APP_SIZE) TOTAL_SIZE,
-        COUNT(DISTINCT E.REVIEW_ID) TOTAL_REVIEWS,
-        COUNT(DISTINCT F.SUBSCRIPTION_ID) TOTAL_SUBSCRIPTIONS
-FROM USER_INFO A
-JOIN PROFILE B ON A.USER_ID = B.USER_ID
-JOIN USER_APP_CATALOGUE C ON B.PROFILE_ID = C.PROFILE_ID
-JOIN APPLICATION D ON C.APP_ID = D.APP_ID
-LEFT JOIN REVIEWS E ON A.USER_ID = E.USER_ID
-LEFT JOIN SUBSCRIPTION F ON A.USER_ID = F.USER_ID
-GROUP BY A.USER_ID
-;
+CREATE VIEW user_app_dashboard (
+    user_id,
+    total_profiles,
+    total_apps,
+    total_size,
+    total_reviews,
+    total_subscriptions
+) AS
+    SELECT
+        a.user_id,
+        COUNT(DISTINCT b.profile_id)      total_profiles,
+        COUNT(DISTINCT d.app_id)          total_apps,
+        SUM(d.app_size)                   total_size,
+        COUNT(DISTINCT e.review_id)       total_reviews,
+        COUNT(DISTINCT f.subscription_id) total_subscriptions
+    FROM
+             user_info a
+        JOIN profile            b ON a.user_id = b.user_id
+        JOIN user_app_catalogue c ON b.profile_id = c.profile_id
+        JOIN application        d ON c.app_id = d.app_id
+        LEFT JOIN reviews            e ON a.user_id = e.user_id
+        LEFT JOIN subscription       f ON a.user_id = f.user_id
+    GROUP BY
+        a.user_id;
 --------------------------------------------------------------------------------
-CREATE VIEW USER_PAYMENT_DASHBOARD (USER_ID, SUBSCRIPTION_TYPE, TOTAL_SUBSCRIPTIONS, SUBSCRIPTION_AMOUT, NEXT_SUBSCRIPTION_END_DATE, MOST_RECENT_SUBSCRIPTION) AS
-SELECT A.USER_ID,
-        B.TYPE SUBSCRIPTION_TYPE,
-        COUNT(DISTINCT B.SUBSCRIPTION_ID) TOTAL_SUBSCRIPTIONS,
-        SUM(B.SUBSCRIPTION_AMOUNT) SUBSCRIPTION_AMOUT,
-        MIN(CASE WHEN B.SUBSCRIPTION_END_DT >= SYSDATE THEN B.SUBSCRIPTION_END_DT ELSE NULL END) NEXT_SUBSCRIPTION_END_DATE,
-        MAX(CASE WHEN B.SUBCRIPTION_START_DT <= SYSDATE THEN B.SUBCRIPTION_START_DT ELSE NULL END) MOST_RECENT_SUBSCRIPTION
-FROM USER_INFO A
-LEFT JOIN SUBSCRIPTION B ON A.USER_ID = B.USER_ID
-GROUP BY A.USER_ID, B.TYPE
-;
+CREATE VIEW user_payment_dashboard (
+    user_id,
+    subscription_type,
+    total_subscriptions,
+    subscription_amout,
+    next_subscription_end_date,
+    most_recent_subscription
+) AS
+    SELECT
+        a.user_id,
+        b.type                            subscription_type,
+        COUNT(DISTINCT b.subscription_id) total_subscriptions,
+        SUM(b.subscription_amount)        subscription_amout,
+        MIN(
+            CASE
+                WHEN b.subscription_end_dt >= sysdate THEN
+                    b.subscription_end_dt
+                ELSE
+                    NULL
+            END
+        )                                 next_subscription_end_date,
+        MAX(
+            CASE
+                WHEN b.subcription_start_dt <= sysdate THEN
+                    b.subcription_start_dt
+                ELSE
+                    NULL
+            END
+        )                                 most_recent_subscription
+    FROM
+        user_info    a
+        LEFT JOIN subscription b ON a.user_id = b.user_id
+    GROUP BY
+        a.user_id,
+        b.type;
 --------------------------------------------------------------------------------
-CREATE VIEW DEV_APP_STATUS (DEVELOPER_NAME, APP_VERSION, SUBSCRIPTION_TYPE, TOTAL_USERS) AS
-SELECT A.DEVELOPER_NAME,
-        B.APP_VERSION,
-        F.TYPE SUBSCRIPTION_TYPE,
-        COUNT(DISTINCT D.USER_ID) TOTAL_USERS
-FROM DEVELOPER A
-JOIN APPLICATION B ON A.DEVELOPER_ID = B.DEVELOPER_ID
-JOIN USER_APP_CATALOGUE C ON B.APP_ID = C.APP_ID
-JOIN PROFILE D ON C.PROFILE_ID = D.PROFILE_ID
-JOIN USER_INFO E ON D.USER_ID = E.USER_ID
-LEFT JOIN SUBSCRIPTION F ON E.USER_ID = F.USER_ID
-GROUP BY A.DEVELOPER_NAME, B.APP_VERSION, F.TYPE
-;
+CREATE VIEW dev_app_status (
+    developer_name,
+    app_version,
+    subscription_type,
+    total_users
+) AS
+    SELECT
+        a.developer_name,
+        b.app_version,
+        f.type                    subscription_type,
+        COUNT(DISTINCT d.user_id) total_users
+    FROM
+             developer a
+        JOIN application        b ON a.developer_id = b.developer_id
+        JOIN user_app_catalogue c ON b.app_id = c.app_id
+        JOIN profile            d ON c.profile_id = d.profile_id
+        JOIN user_info          e ON d.user_id = e.user_id
+        LEFT JOIN subscription       f ON e.user_id = f.user_id
+    GROUP BY
+        a.developer_name,
+        b.app_version,
+        f.type;
 --------------------------------------------------------------------------------
-CREATE VIEW REVENUE_DASHBOARD (APP_ID, TOTAL_USERS, TOTAL_SUBSCRIPTION_AMT, TOTAL_AD_REVENUE, TOTAL_SUBSCRIPTIONS) AS
-SELECT APPLICATION.APP_ID AS APP_ID, 
-        APPLICATION.DOWNLOAD_COUNT AS TOTAL_USERS,
-        SUM(SUBSCRIPTION.SUBSCRIPTION_AMOUNT) AS TOTAL_SUBSCRIPTION_AMT,
-        SUM(ADVERTISEMENT.AD_COST) AS TOTAL_AD_REVENUE, 
-        COUNT(SUBSCRIPTION.SUBSCRIPTION_ID) AS TOTAL_SUBSCRIPTIONS 
-FROM APPLICATION
-LEFT JOIN SUBSCRIPTION ON SUBSCRIPTION.APP_ID  = APPLICATION.APP_ID
-LEFT JOIN ADVERTISEMENT ON ADVERTISEMENT.APP_ID = APPLICATION.APP_ID
-GROUP BY APPLICATION.APP_ID,APPLICATION.DOWNLOAD_COUNT;
+CREATE VIEW revenue_dashboard (
+    app_id,
+    total_users,
+    total_subscription_amt,
+    total_ad_revenue,
+    total_subscriptions
+) AS
+    SELECT
+        application.app_id                    AS app_id,
+        application.download_count            AS total_users,
+        SUM(subscription.subscription_amount) AS total_subscription_amt,
+        SUM(advertisement.ad_cost)            AS total_ad_revenue,
+        COUNT(subscription.subscription_id)   AS total_subscriptions
+    FROM
+        application
+        LEFT JOIN subscription ON subscription.app_id = application.app_id
+        LEFT JOIN advertisement ON advertisement.app_id = application.app_id
+    GROUP BY
+        application.app_id,
+        application.download_count;
