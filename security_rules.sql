@@ -7,7 +7,7 @@ BEGIN
     FOR s IN (SELECT sid, serial# FROM v$session WHERE username = 'DATABASE_ADMIN' union all
             SELECT sid, serial# FROM v$session WHERE username = 'DEVELOPER_MANAGER' union all
             SELECT sid, serial# FROM v$session WHERE username = 'USER_MANAGER') LOOP
-        DBMS_OUTPUT.PUT_LINE('Killing session: ' || s.sid || ',' || s.serial#);
+        DBMS_OUTPUT.PUT_LINE('Terminating session: ' || s.sid || ',' || s.serial#);
         EXECUTE IMMEDIATE 'ALTER SYSTEM KILL SESSION ''' || s.sid || ',' || s.serial# || ''' IMMEDIATE';
     END LOOP;
     dbms_output.put_line('------ User session cleanup successfully completed ------');
