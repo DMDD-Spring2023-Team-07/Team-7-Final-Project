@@ -21,5 +21,5 @@ Our project contains the 6 views below, each of which will help address specific
 -	DEV_APP_STATUS: 
   -	This view will be a tool for the developer to see the overall usage and status of users for their apps. The metrics for this view will be aggregate user counts. These metrics will be broken down by app_version and subscription_type.
 -	REVENUE_DASHBOARD: 
-  -	This view will show an overview of the financial side of the app store for a developer. The metrics here will be broken down by app. Metrics here will include total_users, total_ad_cost, total_subscription_amount, and total_subscriptions.
+  -	This view will show an overview of the financial side of the app store for a developer. The metrics here will be broken down by app. Metrics here will include total_users, total_ad_cost, total_subscription_amount, and total_subscriptions. 
 
