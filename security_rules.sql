@@ -1,3 +1,49 @@
+SET SERVEROUTPUT ON;
+
+-------------- CLEAN UP USER SESSIONS ---------------
+
+BEGIN
+    dbms_output.put_line('------ Starting user session cleanup ------');
+    FOR s IN (SELECT sid, serial# FROM v$session WHERE username = 'DATABASE_ADMIN' union all
+            SELECT sid, serial# FROM v$session WHERE username = 'DEVELOPER_MANAGER' union all
+            SELECT sid, serial# FROM v$session WHERE username = 'USER_MANAGER') LOOP
+        DBMS_OUTPUT.PUT_LINE('Killing session: ' || s.sid || ',' || s.serial#);
+        EXECUTE IMMEDIATE 'ALTER SYSTEM KILL SESSION ''' || s.sid || ',' || s.serial# || ''' IMMEDIATE';
+    END LOOP;
+    dbms_output.put_line('------ User session cleanup successfully completed ------');
+END;
+/
+
+
+-------------- CLEAN UP SCRIPT FOR USER ---------------
+
+DECLARE
+    TYPE user_name_array IS VARRAY(10) OF VARCHAR2(20); -- define the array type
+    user_names user_name_array := user_name_array('STORE_ADMIN', 'DEVELOPER_MANAGER', 'USER_MANAGER'); -- initialize the array with values
+BEGIN
+    dbms_output.put_line('------ Starting user cleanup ------');
+    FOR i IN 1..user_names.count LOOP
+        BEGIN
+            DBMS_OUTPUT.PUT_LINE('**** Deleting user: ' || user_names(i));
+            EXECUTE IMMEDIATE 'DROP USER ' || user_names(i) || ' CASCADE ';
+        EXCEPTION
+                WHEN OTHERS THEN
+                    IF SQLCODE != -1918 THEN
+                        RAISE;
+                    END IF;
+            dbms_output.put_line('**** User already dropped');
+        END;
+    END LOOP;
+    dbms_output.put_line('------ user cleanup successfully completed ------');
+EXCEPTION
+    WHEN OTHERS THEN
+        IF SQLCODE != -1918 THEN
+            RAISE;
+        END IF;
+END;
+/
+
+
 ----- Users Creation -----
 
 -- Creation of App Store Admin
@@ -68,9 +114,9 @@ GRANT CREATE SESSION,CREATE TABLE,CREATE PROCEDURE TO STORE_ADMIN;
 GRANT SELECT ON REVIEWS TO DEVELOPER_MANAGER;
 GRANT SELECT ON APP_CATEGORY TO DEVELOPER_MANAGER;
 
-GRANT SELECT, INSERT, UPDATE ON APPLICATION TO STORE_ADMIN;
-GRANT SELECT, INSERT, UPDATE ON ADVERTISEMENT TO STORE_ADMIN;
-GRANT SELECT, INSERT, UPDATE ON SUBSCRIPTION TO STORE_ADMIN;
+GRANT SELECT, INSERT, UPDATE ON APPLICATION TO DEVELOPER_MANAGER;
+GRANT SELECT, INSERT, UPDATE ON ADVERTISEMENT TO DEVELOPER_MANAGER;
+GRANT SELECT, INSERT, UPDATE ON SUBSCRIPTION TO DEVELOPER_MANAGER;
 
 
 -- Granting access for TABLES to USER_MANAGER user
@@ -78,9 +124,9 @@ GRANT SELECT, INSERT, UPDATE ON SUBSCRIPTION TO STORE_ADMIN;
 GRANT SELECT ON USER_APP_CATALOGUE TO USER_MANAGER;
 GRANT SELECT ON SUBSCRIPTION TO USER_MANAGER;
 
-GRANT SELECT, INSERT, UPDATE ON USER_INFO TO STORE_ADMIN;
-GRANT SELECT, INSERT, UPDATE ON PAYMENTS TO STORE_ADMIN;
-GRANT SELECT, INSERT, UPDATE ON PINCODE TO STORE_ADMIN;
-GRANT SELECT, INSERT, UPDATE ON PROFILE TO STORE_ADMIN;
-GRANT SELECT, INSERT, UPDATE ON REVIEWS TO STORE_ADMIN;
+GRANT SELECT, INSERT, UPDATE ON USER_INFO TO USER_MANAGER;
+GRANT SELECT, INSERT, UPDATE ON PAYMENTS TO USER_MANAGER;
+GRANT SELECT, INSERT, UPDATE ON PINCODE TO USER_MANAGER;
+GRANT SELECT, INSERT, UPDATE ON PROFILE TO USER_MANAGER;
+GRANT SELECT, INSERT, UPDATE ON REVIEWS TO USER_MANAGER;
 
