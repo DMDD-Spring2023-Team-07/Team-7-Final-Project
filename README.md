@@ -1,13 +1,24 @@
-# DMDD-Team-7-Project-3
+## DMDD-Team-7-Project-3
 
-Instructions:
-1. Post Login excute 'security_rules.sql' : This file creates users , sessions and grants access
-2. Then excute 'App_Store_Management.sql' : Which contains both DDL and DML scripts for the project
+# Instructions:
+1. Then excute 'App_Store_Management.sql' : Which contains both DDL and DML scripts for the project as admin
+2. Post Login excute 'security_rules.sql' : This file creates users , sessions and grants access
 
+# Description and security rules for the users:
+ADMIN : ( Username : STORE_ADMIN , Password : QueryNinjas#6210)
+Complete Access -> All Tables (Except for the Payments table)
+
+ORGANIZATION/DEVELOPER : ( Username : DEVELOPER_MANAGER , Password : QueryNinjas#6210)
+SELECT -> REVIEWS,APP_CATEGORY
+SELECT, INSERT, UPDATE -> APPLICATION,ADVERTISEMENT,SUBSCRIPTION
+                                                                                                   
+USER : (Username : USER_MANAGER , Password : QueryNinjas#6210)
+SELECT -> USER_APP_CATALOGUE,SUBSCRIPTION 
+SELECT, INSERT, UPDATE -> USER,PAYMENTS,PINCODE,PROFILE,REVIEWS 
 
 ***The updated view descriptions for the views that we have included in the code are below
 
-## View Descriptions:
+# View Descriptions:
 Our project contains the 6 views below, each of which will help address specific problems and provide a clear overview of the app store. These views will also be relevant for the end-user and for business reporting. 
 
 -	APP_STORE_APP_OVERVIEW: 
