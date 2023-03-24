@@ -1,11 +1,14 @@
 ## DMDD-Team-7-Project-3
 
 # Instructions:
-1. Then excute 'App_Store_Management.sql' : Which contains both DDL and DML scripts for the project as admin
-2. Post Login excute 'security_rules.sql' : This file creates users , sessions and grants access
+1. Post Login excute 'security_rules.sql' : This file creates users , sessions and grants access
+2. Then excute 'App_Store_Management.sql' : with credentials ( Username : DB_ADMIN , Password :  QueryNinjas#6210) Which contains both DDL and DML scripts for the project as admin
 
 # Description and security rules for the users:
-ADMIN : ( Username : STORE_ADMIN , Password : QueryNinjas#6210)
+DB_ADMIN : ( Username : DBADMIN , Password :  QueryNinjas#6210 )
+Complete Access -> All Tables
+
+STORE_ADMIN : ( Username : STORE_ADMIN , Password : QueryNinjas#6210)
 Complete Access -> All Tables (Except for the Payments table)
 
 ORGANIZATION/DEVELOPER : ( Username : DEVELOPER_MANAGER , Password : QueryNinjas#6210)
