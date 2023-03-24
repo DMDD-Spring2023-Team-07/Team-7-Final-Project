@@ -8,15 +8,13 @@ Instructions:
 ***The updated view descriptions for the views that we have included in the code are below
 
 ## View Descriptions:
-
-1.	Views
-•	Our project contains the 6 views below, each of which will help address specific problems and provide a clear overview of the app store. These views will also be relevant for the end-user and for business reporting. 
-•	APP_STORE_APP_OVERVIEW: 
-o	This view will show numerous aggregate app counts for the app store over time. Examples of these counts will include total_apps. These counts will be grouped by time, app_category, and overall_rating for more granular breakdowns of the data. 
-•	APP_STORE_USER_USAGE: 
-o	This view will show numerous aggregate user and profile counts for the app store over time. Examples of these counts will include total_users and total_profiles. These counts will be grouped by time and user_country for more granular breakdowns of the data. 
-•	USER_APP_DASHBOARD: 
-o	This view will show a user’s overall experience in the app platform. Overall user metrics will be included, such as total_profiles, total_apps, total_apps_with_available_update, total_size, total_subscriptions, total_reviews etc.  
+-	Our project contains the 6 views below, each of which will help address specific problems and provide a clear overview of the app store. These views will also be relevant for the end-user and for business reporting. 
+-	APP_STORE_APP_OVERVIEW: 
+  -	This view will show numerous aggregate app counts for the app store over time. Examples of these counts will include total_apps. These counts will be grouped by time, app_category, and overall_rating for more granular breakdowns of the data. 
+- APP_STORE_USER_USAGE: 
+  -	This view will show numerous aggregate user and profile counts for the app store over time. Examples of these counts will include total_users and total_profiles. These counts will be grouped by time and user_country for more granular breakdowns of the data. 
+-	USER_APP_DASHBOARD: 
+  -	This view will show a user’s overall experience in the app platform. Overall user metrics will be included, such as total_profiles, total_apps, total_apps_with_available_update, total_size, total_subscriptions, total_reviews etc.  
 •	USER_PAYMENT_DASHBOARD: 
 o	This view will show an overview of a user’s existing subscriptions and payments. Metrics here will include total_subscription_amount, next_subscription_end_date, and most_recent_subscription. These metrics will be broken down by subscription type. 
 •	DEV_APP_STATUS: 
