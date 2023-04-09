@@ -98,6 +98,9 @@ GRANT CREATE VIEW TO DB_ADMIN;
 -- Granting accesses for Stores Procedures to DATABASE_ADMIN user
 GRANT CREATE SESSION, CREATE TABLE, CREATE PROCEDURE TO DB_ADMIN;
 
+-- Granting accesses for Sequences to DATABASE_ADMIN user
+GRANT CREATE SEQUENCE TO DB_ADMIN;
+
 
 
 -- Save the changes
