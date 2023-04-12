@@ -184,7 +184,7 @@ CREATE TABLE reviews (
     review_id INT PRIMARY KEY,
     user_id   INT,
     app_id    INT,
-    rating    INT,
+    rating    DECIMAL(10, 2),
     feedback  VARCHAR(255)
 );
 
@@ -238,7 +238,7 @@ CREATE TABLE advertisement (
     developer_id INTEGER NOT NULL,
     app_id       INTEGER NOT NULL,
     ad_details   VARCHAR(255) NOT NULL,
-    ad_cost      DECIMAL NOT NULL,
+    ad_cost      DECIMAL(10, 2) NOT NULL,
     CONSTRAINT ad_id_pk PRIMARY KEY ( ad_id ),
     CONSTRAINT advertisement_fk1 FOREIGN KEY ( developer_id )
         REFERENCES developer ( developer_id ),
@@ -259,7 +259,7 @@ CREATE TABLE subscription (
         CONSTRAINT check_constraint_type CHECK ( type IN ( 'One Time', 'Recurring' ) ),
     subcription_start_dt DATE NOT NULL,
     subscription_end_dt  DATE NOT NULL,
-    subscription_amount  DECIMAL NOT NULL,
+    subscription_amount  DECIMAL(10, 2) NOT NULL,
     CONSTRAINT subscription_id_pk PRIMARY KEY ( subscription_id ),
     CONSTRAINT subscription_fk1 FOREIGN KEY ( app_id )
         REFERENCES application ( app_id ),
