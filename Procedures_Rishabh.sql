@@ -279,7 +279,7 @@ EXCEPTION
 END;
 
 
-EXECUTE insert_developer('Jhon Doe','jhon@northeastern.edu', '123456789', 'Northeastern University', 'Basic license description');
+EXECUTE insert_developer('Jhon Doe','jhon1@northeastern.edu', '123456789', 'Northeastern University2', 'Basic license description');
 
 
 
@@ -336,7 +336,11 @@ CREATE OR REPLACE PROCEDURE insert_application (
     p_target_age IN application.target_age%TYPE,
     p_supported_os IN application.supported_os%TYPE
 ) IS
-    v_developer_id developer.developer_id%TYPE;
+    v_developer_id NUMBER;
+    v_developer_count NUMBER;
+    v_category_count NUMBER;
+    v_app_count NUMBER;
+    v_app_name application.app_name%TYPE;
     v_category_id app_category.category_id%TYPE;
     v_app_id application.app_id%TYPE;
     v_app_version application.app_version%TYPE := 1;
@@ -354,45 +358,85 @@ BEGIN
         RAISE_APPLICATION_ERROR(-20003, 'App name is required');
     END IF;
     
-    -- Check if app name already exists
-    SELECT COUNT(*) INTO v_app_id FROM application WHERE app_name = p_app_name;
-    IF v_app_id > 0 THEN
-        RAISE_APPLICATION_ERROR(-20004, 'App name already exists');
-    END IF;
 
     IF p_app_language IS NULL OR TRIM(p_app_language) = '' THEN
         RAISE_APPLICATION_ERROR(-20005, 'App language is required');
     END IF;
     
+    SELECT COUNT(*) INTO v_developer_count
+    FROM developer
+    WHERE developer_email = LOWER(p_developer_email);
+    
+    IF v_developer_count = 0 THEN
+        dbms_output.put_line('Developer email not found' || p_developer_email);
+        raise_application_error(-20004, 'Developer email does not exist');
+    END IF;
+    
     -- Find the developer ID from the developer table
     SELECT developer_id INTO v_developer_id FROM developer WHERE developer_email = LOWER(p_developer_email);
-    IF v_developer_id IS NULL THEN
-        RAISE_APPLICATION_ERROR(-20006, 'Developer email does not exist');
+
+    
+    SELECT COUNT(*) INTO v_category_count
+    FROM app_category
+    WHERE category_type = INITCAP(p_category_type);
+    
+    IF v_category_count = 0 THEN
+        dbms_output.put_line('Category does not found' || p_developer_email);
+        RAISE_APPLICATION_ERROR(-20007, 'Category type does not exist');
     END IF;
     
     -- Find the category ID from the app_category table
     SELECT category_id INTO v_category_id FROM app_category WHERE category_type = INITCAP(p_category_type);
-    IF v_category_id IS NULL THEN
-        RAISE_APPLICATION_ERROR(-20007, 'Category type does not exist');
+
+    v_app_name := INITCAP(p_app_name);
+
+    SELECT COUNT(*) INTO v_app_count
+    FROM application
+    WHERE app_name = v_app_name AND DEVELOPER_ID != v_developer_id;
+        
+    IF v_app_count > 0 THEN
+        dbms_output.put_line('App name already exists - ' || v_app_name);
+        RAISE_APPLICATION_ERROR(-20007, 'App with this name already exists published by other developer');
     END IF;
     
     
     -- Get the app version from the application table and increment it if the app name already exists
-    SELECT app_version INTO v_app_version
+    SELECT COUNT(*) INTO v_app_count
     FROM application
-    WHERE app_name = p_app_name;
+    WHERE app_name = v_app_name AND DEVELOPER_ID = v_developer_id;
     
-    IF v_app_version IS NOT NULL THEN
-        v_app_version := v_app_version + 1;
+    dbms_output.put_line('App name with count same dev - ' || v_app_count);
+
+    
+    IF v_app_count > 0 THEN
+        
+        SELECT app_version INTO v_app_version
+        FROM application
+        WHERE app_name = v_app_name;
+        
+        IF v_app_version IS NOT NULL THEN
+            v_app_version := v_app_version + 1;
+        END IF;
+        
+        UPDATE application
+        SET app_version=v_app_version, app_size=p_app_size, category_id=v_category_id, app_language=p_app_language, target_age=p_target_age, supported_os=p_supported_os
+        WHERE app_name=v_app_name;
+        
+        dbms_output.put_line('Application updated succesfully with name - ' || v_app_name);
+        
+    ELSE
+        
+        -- Generate a new app ID using a sequence
+        SELECT application_seq.NEXTVAL INTO v_app_id FROM dual;
+    
+        -- Insert the new record into the application table
+        INSERT INTO application(app_id, developer_id, category_id, app_name, app_size, app_version, app_language, download_count, target_age, supported_os, overall_rating, app_create_dt)
+        VALUES(v_app_id, v_developer_id, v_category_id, v_app_name, p_app_size, v_app_version, p_app_language, 0, p_target_age, p_supported_os, 0.0, SYSDATE);
+        dbms_output.put_line('Application is created succesfully with name - ' || v_app_name);
+    
     END IF;
     
-    -- Generate a new app ID using a sequence
-    SELECT application_seq.NEXTVAL INTO v_app_id FROM dual;
-
-    -- Insert the new record into the application table
-    INSERT INTO application(app_id, developer_id, category_id, app_name, app_size, app_version, app_language, download_count, target_age, supported_os, overall_rating, app_create_dt)
-    VALUES(v_app_id, v_developer_id, v_category_id, p_app_name, p_app_size, v_app_version, p_app_language, 0, p_target_age, p_supported_os, 0.0, SYSDATE);
-
+    
     COMMIT;
 EXCEPTION
     WHEN OTHERS THEN
@@ -400,7 +444,11 @@ EXCEPTION
         dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
 END;
 
-EXECUTE insert_application('risahb@gmail.com','Health', 'WhatsApp', 85, 'English', 10, 'Android');
+EXECUTE insert_application('','Health', 'WhatsApp', 85, 'English', 10, 'Android');
+EXECUTE insert_application('rishab@gmail.com','', 'WhatsApp', 85, 'English', 10, 'Android');
+EXECUTE insert_application('jhon@northeastern.edu','Health', 'WhatsApp', 85, 'English', 10, 'Android');
+
+EXECUTE insert_application('jhon1@northeastern.edu','Health', 'Facebook', 85, 'English', 10, 'iOS');
 
 
 
