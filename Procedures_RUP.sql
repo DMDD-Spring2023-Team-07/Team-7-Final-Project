@@ -27,6 +27,15 @@ create or replace procedure PROCEDURE_REVIEWS
     INSERT INTO reviews (review_id, user_id, app_id, rating, feedback)
     VALUES (REVIEW_SEQ.NEXTVAL, USER_SEQ.NEXTVAL, APPLICATION_SEQ.NEXTVAL,4, 'Great app, very user-friendly');
     
+    -- Update overall_rating in the application table 
+    
+    UPDATE application 
+    SET overall_rating = (SELECT ROUND(AVG(rating))
+                         FROM reviews 
+                         WHERE app_id = APPLICATION_SEQ.NEXTVAL)
+    WHERE app_id = APPLICATION_SEQ.NEXTVAL;
+    
+    
     
     
     
