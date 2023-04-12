@@ -203,7 +203,7 @@ BEGIN
     
     -- Insert the new row into the profile table
     INSERT INTO profile(profile_id, user_id, profile_name, device_info, profile_type, created_at, updated_at)
-    VALUES(PROFILE_SEQ.NEXTVAL, l_user_id, p_profilename, p_device_info, p_profile_type, SYSDATE, SYSDATE);
+    VALUES(PROFILE_SEQ.NEXTVAL, l_user_id, INITCAP(p_profilename), LOWER(p_device_info), p_profile_type, SYSDATE, SYSDATE);
     
     COMMIT;
 EXCEPTION
@@ -453,4 +453,443 @@ EXECUTE insert_application('jhon1@northeastern.edu','Health', 'Facebook', 85, 'E
 
 
 
+-- Creating a procedure for Subscription table
 
+CREATE OR REPLACE PROCEDURE insert_subscription(
+    p_app_name IN application.app_name%TYPE,
+    p_user_email IN user_info.user_email%TYPE,
+    p_subscription_name IN subscription.subscription_name%TYPE,
+    p_type IN subscription.type%TYPE,
+    p_subscription_start_dt IN subscription.subcription_start_dt%TYPE,
+    p_subscription_end_dt IN subscription.subscription_end_dt%TYPE,
+    p_subscription_amount IN subscription.subscription_amount%TYPE
+)
+IS
+    v_subscription_id subscription.subscription_id%TYPE;
+    v_app_id application.app_id%TYPE;
+    v_user_id user_info.user_id%TYPE;
+    v_app_name application.app_name%TYPE;
+    v_app_count NUMBER;
+    v_user_count NUMBER;
+    v_sub_count NUMBER;
+    v_subscription_name subscription.subscription_name%TYPE;
+
+BEGIN
+    -- Check for null or empty values
+    IF p_app_name IS NULL OR TRIM(p_app_name) = '' THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Application name is required');
+    END IF;
+    
+    IF p_user_email IS NULL OR TRIM(p_user_email) = '' THEN
+        RAISE_APPLICATION_ERROR(-20002, 'User email is required');
+    END IF;
+    
+    IF p_subscription_name IS NULL OR TRIM(p_subscription_name) = '' THEN
+        RAISE_APPLICATION_ERROR(-20003, 'Subscription name is required');
+    END IF;
+    
+    IF p_type IS NULL OR TRIM(p_type) = '' THEN
+        RAISE_APPLICATION_ERROR(-20004, 'Type is required');
+    ELSIF p_type NOT IN ('One Time', 'Recurring') THEN
+        RAISE_APPLICATION_ERROR(-20005, 'Type should be either "One Time" or "Recurring"');
+    END IF;
+    
+    IF p_subscription_amount IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20006, 'Subscription amount is required');
+    ELSIF p_subscription_amount <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20007, 'Subscription amount should be more than 0');
+    END IF;
+    
+    IF p_subscription_start_dt IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20008, 'Subscription start date is required');
+    END IF;
+    
+    IF p_subscription_end_dt IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20009, 'Subscription end date is required');
+    END IF;
+
+    
+    -- Get the user count from the user_info table
+    SELECT COUNT(*) INTO v_user_count
+    FROM user_info
+    WHERE user_email = LOWER(p_user_email);
+    
+    IF v_user_count = 0 THEN
+        dbms_output.put_line('User count - ' || v_user_count);
+        RAISE_APPLICATION_ERROR(-20011, 'Invalid user email');
+    END IF;
+    
+    -- Get the user_id from the user_info table
+    SELECT user_id INTO v_user_id FROM user_info WHERE user_email = p_user_email;
+    
+    
+    -- Checking the Application name
+    v_app_name := INITCAP(p_app_name);
+
+    SELECT COUNT(*) INTO v_app_count
+    FROM application
+    WHERE app_name = v_app_name;
+        
+    IF v_app_count = 0 THEN
+        dbms_output.put_line('App name does not exists - ' || v_app_name);
+        RAISE_APPLICATION_ERROR(-20014, 'App with this name does not exists');
+    END IF;
+    
+        
+    -- Get the app_id from the application table
+    SELECT app_id INTO v_app_id FROM application WHERE app_name = v_app_name;
+    
+    
+    
+    -- Check for active subscription with the name
+    v_subscription_name := INITCAP(p_subscription_name);
+    
+    SELECT COUNT(*) INTO v_sub_count
+    FROM SUBSCRIPTION
+    WHERE app_id = v_app_id AND subscription_name = v_subscription_name;
+    
+    dbms_output.put_line('Number of subscription - ' || v_sub_count || ' - ' || v_subscription_name || ' - ' || v_app_id);
+    
+    IF v_sub_count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20013, 'You already have active subscription with this name' || v_subscription_name);
+    END IF;
+    
+    
+    -- Generate a new subscription ID using a sequence
+    SELECT subscription_seq.NEXTVAL INTO v_subscription_id FROM dual;
+
+    -- Insert the new record into the subscription table
+    INSERT INTO subscription(subscription_id, app_id, user_id, subscription_name, type, subcription_start_dt, subscription_end_dt, subscription_amount)
+    VALUES(v_subscription_id, v_app_id, v_user_id, v_subscription_name, p_type, p_subscription_start_dt, p_subscription_end_dt, p_subscription_amount);
+    dbms_output.put_line('Subscription inserted succesfully - ');
+
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
+END;
+/
+
+EXECUTE insert_subscription('WhatsApp', 'rishab@gmail.com', 'In-app Game', 'One Time', TO_DATE('2023-04-11', 'YYYY-MM-DD'), TO_DATE('2023-05-11', 'YYYY-MM-DD'), 10.5);
+
+
+
+
+-- Procedure for Inserting a review
+
+CREATE OR REPLACE PROCEDURE insert_review(
+  p_app_name IN application.app_name%TYPE,
+  p_user_email IN user_info.user_email%TYPE,
+  p_rating IN NUMBER,
+  p_feedback IN reviews.feedback%TYPE
+) IS
+  v_app_id NUMBER;
+  v_user_id NUMBER;
+  v_review_id NUMBER;
+  v_app_name application.app_name%TYPE;
+  v_app_count NUMBER;
+  v_user_count NUMBER;
+BEGIN
+
+ 
+
+    -- Check if the rating and feedback parameters are not null
+    IF p_rating IS NULL THEN
+        raise_application_error(-20001, 'Rating cannot be null');
+    ELSIF p_rating <= 0 THEN
+        raise_application_error(-20002, 'Subscription ratin should be more than 0');
+    ELSIF p_rating > 5 THEN
+        raise_application_error(-20003, 'Subscription rating should be less than 5');
+    END IF;
+    
+    IF p_feedback IS NULL OR trim(p_feedback) = '' THEN
+        raise_application_error(-20004, 'Feedback cannot be null');
+    END IF;
+      
+  
+  
+    -- Checking the Application name
+    v_app_name := INITCAP(p_app_name);
+
+    SELECT COUNT(*) INTO v_app_count
+    FROM application
+    WHERE app_name = v_app_name;
+        
+    IF v_app_count = 0 THEN
+        dbms_output.put_line('App name does not exists - ' || v_app_name);
+        RAISE_APPLICATION_ERROR(-20014, 'App with this name does not exists');
+    END IF;
+    
+     -- Get the user count from the user_info table
+    SELECT COUNT(*) INTO v_user_count
+    FROM user_info
+    WHERE user_email = LOWER(p_user_email);
+    
+    IF v_user_count = 0 THEN
+        dbms_output.put_line('User count - ' || v_user_count);
+        RAISE_APPLICATION_ERROR(-20011, 'Invalid user email');
+    END IF;
+    
+    -- Get the user_id from the user_info table
+    SELECT user_id INTO v_user_id FROM user_info WHERE user_email = p_user_email;
+    
+        
+    -- Get the app_id from the application table
+    SELECT app_id INTO v_app_id FROM application WHERE app_name = v_app_name;
+    
+    
+    -- Generate the next review_id using the review_seq sequence
+      SELECT review_seq.nextval INTO v_review_id FROM dual;
+    
+      -- Insert the new row into the reviews table
+      INSERT INTO reviews(review_id, app_id, user_id, rating, feedback)
+      VALUES(v_review_id, v_app_id, v_user_id, p_rating, p_feedback);
+  
+  COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
+END;
+
+
+EXECUTE insert_review('WhatsApp', 'rishab@gmail.com', 4.3, 'This is an awesome review');
+
+
+-- Procedure for USER APP CATALOGUE
+
+CREATE OR REPLACE PROCEDURE INSERT_USER_APP_CATALOGUE (
+    p_app_name            IN application.app_name%TYPE,
+    p_user_email          IN user_info.user_email%TYPE,
+    p_device_info         IN profile.device_info%TYPE,
+    p_install_policy_desc IN user_app_catalogue.install_policy_desc%TYPE
+)
+AS
+    v_app_id NUMBER;
+    v_user_id NUMBER;
+    v_profile_id NUMBER;
+    v_app_count NUMBER;
+    v_user_count NUMBER;
+    v_profile_count NUMBER;
+    v_app_insall_count NUMBER;
+BEGIN
+
+
+    IF p_install_policy_desc IS NULL THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Install policy cannot be null');
+    END IF;
+    
+
+    SELECT COUNT(*) INTO v_app_count
+    FROM application
+    WHERE app_name = INITCAP(p_app_name);
+        
+    IF v_app_count = 0 THEN
+        dbms_output.put_line('App name does not exists - ' || p_app_name);
+        RAISE_APPLICATION_ERROR(-20014, 'App with this name does not exists');
+    END IF;
+    
+    
+    -- Get the user count from the user_info table
+    SELECT COUNT(*) INTO v_user_count
+    FROM user_info
+    WHERE user_email = LOWER(p_user_email);
+    
+    IF v_user_count = 0 THEN
+        dbms_output.put_line('User count - ' || v_user_count);
+        RAISE_APPLICATION_ERROR(-20011, 'Invalid user email');
+    END IF;
+    
+    
+    
+    -- get app_id from application table
+    SELECT app_id INTO v_app_id FROM application WHERE app_name = INITCAP(p_app_name);
+
+    -- get user_id from user_info table
+    SELECT user_id INTO v_user_id FROM user_info WHERE user_email = p_user_email;
+    
+    
+    -- Get the profile count from the PROFILE table
+    SELECT COUNT(*) INTO v_profile_count
+    FROM profile
+    WHERE device_info = LOWER(p_device_info) AND user_id = v_user_id;
+    
+    IF v_profile_count = 0 THEN
+        dbms_output.put_line('User profile count - ' || v_profile_count);
+        RAISE_APPLICATION_ERROR(-20012, 'User profile does not exists');
+    END IF;
+    
+
+    -- get profile_id from profile table
+    SELECT profile_id INTO v_profile_id FROM profile WHERE device_info = LOWER(p_device_info) AND user_id = v_user_id;
+
+    
+    -- Check for user app install count with same app
+    SELECT COUNT(*) INTO v_app_insall_count
+    FROM user_app_catalogue
+    WHERE app_id = v_app_id AND v_profile_id = v_profile_id;
+    
+    
+    IF v_app_insall_count > 0 THEN
+        dbms_output.put_line('User already has this app.');
+        RAISE_APPLICATION_ERROR(-20013, 'User already have this app');
+    END IF;
+    
+    -- insert into user_app_catalogue table
+    INSERT INTO user_app_catalogue (
+        catalogue_id,
+        app_id,
+        profile_id,
+        installed_version,
+        is_update_available,
+        install_policy_desc,
+        is_accepted
+    )
+    VALUES (
+        catalogue_seq.NEXTVAL,
+        v_app_id,
+        v_profile_id,
+        (SELECT app_version FROM application WHERE app_id = v_app_id),
+        0,
+        p_install_policy_desc,
+        1
+    );
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
+END;
+/
+
+EXECUTE INSERT_USER_APP_CATALOGUE('WhatsApp', 'rishab@gmail.com', 'android device', 'This is sample install policy');
+
+
+-- Procedure for Payments
+CREATE OR REPLACE PROCEDURE insert_payment(
+  p_user_email IN user_info.user_email%TYPE,
+  p_name_on_card IN payments.name_on_card%TYPE,
+  p_card_number IN payments.card_number%TYPE,
+  p_cvv IN payments.cvv%TYPE
+) IS
+  v_user_id user_info.user_id%TYPE;
+  v_billing_id payments.billing_id%TYPE;
+  v_user_count NUMBER;
+BEGIN
+  
+  -- Check if the name_on_card, card_number, and cvv parameters are not null
+  IF p_name_on_card IS NULL THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Name on card cannot be null');
+  END IF;
+
+  IF p_card_number IS NULL THEN
+    RAISE_APPLICATION_ERROR(-20002, 'Card number cannot be null');
+  END IF;
+
+  IF p_cvv IS NULL THEN
+    RAISE_APPLICATION_ERROR(-20003, 'CVV cannot be null');
+  END IF;
+  
+   -- Get the user count from the user_info table
+    SELECT COUNT(*) INTO v_user_count
+    FROM user_info
+    WHERE user_email = LOWER(p_user_email);
+    
+    IF v_user_count = 0 THEN
+        dbms_output.put_line('User count - ' || v_user_count);
+        RAISE_APPLICATION_ERROR(-20011, 'Invalid user email');
+    END IF;
+  
+  -- Get the user_id from the user_info table based on the user_email parameter
+  SELECT user_id INTO v_user_id FROM user_info WHERE user_email = LOWER(p_user_email);
+
+  -- Generate the next billing_id using the billing_seq sequence
+  SELECT billing_seq.nextval INTO v_billing_id FROM dual;
+
+  
+  -- Insert the new row into the payments table
+  INSERT INTO payments(billing_id, user_id, name_on_card, card_number, cvv, created_at)
+  VALUES(v_billing_id, v_user_id, p_name_on_card, p_card_number, p_cvv, SYSDATE);
+
+  COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
+END;
+
+
+execute insert_payment('rishab@gmail.com', 'jaini', 'ABC12345', '255');
+
+
+-- Procedure for ADVERTISEMENT
+CREATE OR REPLACE PROCEDURE insert_advertisement (
+    p_app_name IN application.app_name%TYPE,
+    p_ad_details IN advertisement.ad_details%TYPE,
+    p_ad_cost IN advertisement.ad_cost%TYPE
+) AS
+    v_developer_id developer.developer_id%TYPE;
+    v_app_id application.app_id%TYPE;
+    v_app_count NUMBER;
+    v_ad_count NUMBER;
+BEGIN
+    
+    -- Check for null and empty on ad_details
+    IF p_ad_details IS NULL OR TRIM(p_ad_details) = '' THEN
+        RAISE_APPLICATION_ERROR(-20001, 'Ad details cannot be null or empty');
+    END IF;
+    
+    -- Check for ad_cost more than 0
+    IF p_ad_cost <= 0 THEN
+        RAISE_APPLICATION_ERROR(-20002, 'Ad cost must be greater than 0');
+    END IF;
+    
+    
+    SELECT COUNT(*) INTO v_app_count
+    FROM application
+    WHERE app_name = INITCAP(p_app_name);
+        
+    IF v_app_count = 0 THEN
+        dbms_output.put_line('App name does not exists - ' || p_app_name);
+        RAISE_APPLICATION_ERROR(-20014, 'App with this name does not exists');
+    END IF;
+    
+    -- Get the app_id from the application table using app_name
+    SELECT app_id INTO v_app_id
+    FROM application
+    WHERE app_name = p_app_name;
+    
+    
+    -- Get the developer_id from the developer table using developer_email
+    SELECT developer_id INTO v_developer_id
+    FROM application
+    WHERE app_id = v_app_id;
+    
+     
+    SELECT COUNT(*) INTO v_ad_count
+    FROM advertisement
+    WHERE app_id = v_app_id AND ad_details = UPPER(p_ad_details);
+    
+         
+    IF v_ad_count > 0 THEN
+        RAISE_APPLICATION_ERROR(-20015, 'Advertisement for the app with ad details - ' || p_ad_details || ' already exists.');
+    END IF;
+    
+    -- Insert into advertisement table
+    INSERT INTO advertisement (ad_id, developer_id, app_id, ad_details, ad_cost)
+    VALUES (advertisement_seq.NEXTVAL, v_developer_id, v_app_id, UPPER(p_ad_details), p_ad_cost);
+    
+    COMMIT;
+    DBMS_OUTPUT.PUT_LINE('Advertisement added successfully');
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        RAISE_APPLICATION_ERROR(-20003, 'Developer or application not found');
+    WHEN OTHERS THEN
+        ROLLBACK;
+        DBMS_OUTPUT.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
+END;
+/
+
+
+EXECUTE insert_advertisement('Whatsapp', 'BINGO50', 10.5);
