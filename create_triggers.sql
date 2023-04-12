@@ -1,5 +1,43 @@
 -------------- Creating all TRIGGERS ---------------
 -- UPDATE THE OVERALL RATING
+create or replace procedure PROCEDURE_REVIEWS
+(
+    p_review_id IN reviews.review_id%TYPE,
+    p_rating    IN reviews.rating%TYPE,
+    p_feedback  IN reviews.feedback%TYPE
+    )
+    
+    IS 
+    
+    BEGIN
+    
+    -- review_id NOT NULL
+    IF p_review_id IS NULL OR LENGTH(p_review_id) = 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'There should be existing reviews');
+  END IF;
+    -- rating NOT NULL
+    IF p_rating IS NULL OR LENGTH(p_rating) = 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'App ratings should exist');
+  END IF;
+    -- feedback NOT NULL
+    IF p_feedback IS NULL OR LENGTH(p_feedback) = 0 THEN
+    RAISE_APPLICATION_ERROR(-20001, 'Feedback should exist');
+  END IF;
+  
+    -- Inserting values into the reviews table
+    INSERT INTO reviews (review_id, user_id, app_id, rating, feedback)
+    VALUES (REVIEW_SEQ.NEXTVAL, USER_SEQ.NEXTVAL, APPLICATION_SEQ.NEXTVAL,4, 'Great app, very user-friendly');
+    
+    -- Update overall_rating in the application table
+    UPDATE application 
+    SET overall_rating = (SELECT ROUND(AVG(rating))
+                         FROM reviews 
+                         WHERE app_id = APPLICATION_SEQ.NEXTVAL)
+    WHERE app_id = APPLICATION_SEQ.NEXTVAL;
+    
+
+    END;
+
 --drop trigger update_overall_rating;
 -- CREATE OR REPLACE TRIGGER update_overall_rating
 -- AFTER INSERT or update ON reviews
