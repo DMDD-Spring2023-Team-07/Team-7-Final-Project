@@ -282,41 +282,6 @@ BEGIN
         dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
 END;
 
--- Procedure for Application table ----------------------------------------------------------------------------------------------------------------------
-CREATE OR REPLACE PROCEDURE insert_app_category(
-    p_category_description IN app_category.category_description%TYPE,
-    p_category_type IN app_category.category_type%TYPE
-)
-IS
-    v_number_of_apps INTEGER := 0;
-    v_category_type VARCHAR(255);
-    v_category_id app_category.category_id%TYPE;
-BEGIN
-    IF p_category_description IS NULL OR LENGTH(p_category_description) = 0 THEN
-        RAISE_APPLICATION_ERROR(-20001, 'Category description cannot be null or empty');
-    END IF;
-    
-    IF p_category_type IS NULL OR REGEXP_LIKE(p_category_type, '^\d+$') THEN
-        RAISE_APPLICATION_ERROR(-20002, 'Invalid category type');
-    END IF;
-    
-    v_category_type := INITCAP(p_category_type);
-
-    -- Check if category_type already exists in app_category table
-    SELECT category_id INTO v_category_id FROM app_category WHERE category_type = v_category_type;
-    
-    IF v_category_id IS NOT NULL THEN
-        RAISE_APPLICATION_ERROR(-20003, 'Category type already exists');
-    END IF;
-    
-    INSERT INTO app_category(category_id, category_description, category_type, number_of_apps)
-    VALUES (category_seq.nextval, p_category_description, v_category_type, v_number_of_apps);
-    COMMIT;
-    EXCEPTION
-    WHEN OTHERS THEN
-        ROLLBACK;
-        dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
-END;
 
 -- Procedure for Application table ---------------------------------------------------------------------------------------------
 
@@ -738,7 +703,7 @@ BEGIN
 END;
 /
 
--- Procedure for Payments
+-- Procedure for Payments ---------------------------------------------------------------------------------------------
 CREATE OR REPLACE PROCEDURE insert_payment(
   p_user_email IN user_info.user_email%TYPE,
   p_name_on_card IN payments.name_on_card%TYPE,
@@ -750,8 +715,7 @@ CREATE OR REPLACE PROCEDURE insert_payment(
   v_user_count NUMBER;
 BEGIN
   
-  -- Check if the name_on_card, card_number, and cvv parameters are not null ---------------------------------------------------------------------------------------------
-  IF p_name_on_card IS NULL THEN
+  -- Check if the name_on_card, card_number, and cvv parameters are not null 
     RAISE_APPLICATION_ERROR(-20001, 'Name on card cannot be null');
   END IF;
 
