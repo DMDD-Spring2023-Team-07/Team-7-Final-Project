@@ -774,11 +774,11 @@ BEGIN
         -- get profile_id from profile table
         SELECT profile_id INTO v_profile_id FROM profile WHERE device_info = LOWER(p_device_info) AND user_id = v_user_id;
 
-        
+        dbms_output.put_line('Profile id - ' || v_profile_id);
         -- Check for user app install count with same app
         SELECT COUNT(*) INTO v_app_insall_count
         FROM user_app_catalogue
-        WHERE app_id = v_app_id AND v_profile_id = v_profile_id;
+        WHERE app_id = v_app_id AND profile_id = v_profile_id;
         
         
         IF v_app_insall_count > 0 THEN

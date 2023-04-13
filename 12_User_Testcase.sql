@@ -19,5 +19,8 @@ execute db_admin.user_manager_pkg.create_profile_pkg('ori@email.com','ori_profil
 -- If app does not exists
 execute db_admin.user_manager_pkg.insert_user_app_catalog_pkg('Facebook', 'ori@email.com', 'ori_profile', 'This is sample install policy');
 
+-- If app does exists
+execute db_admin.user_manager_pkg.insert_user_app_catalog_pkg('Shazam', 'ori@email.com', 'ios device', 'This is sample install policy');
+
 
 execute db_admin.user_manager_pkg.get_apps_for_profile(1000000);
