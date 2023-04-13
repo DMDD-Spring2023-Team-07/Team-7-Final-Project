@@ -1,7 +1,43 @@
-set serveroutput on
+SET SERVEROUTPUT ON
 
-CREATE OR REPLACE PACKAGE user_package AS
-   
+---------------Package Specification -----------------------\
+
+CREATE OR REPLACE PACKAGE user_manager_pkg
+IS
+    PROCEDURE select_user_info;
+
+    PROCEDURE insert_user_info_pkg (
+        p_user_zip_code IN user_info.user_zip_code%TYPE,
+        p_user_name     IN user_info.user_name%TYPE,
+        p_user_email    IN user_info.user_email%TYPE,
+        p_user_passcode IN user_info.user_passcode%TYPE
+    );
+    
+    PROCEDURE create_profile_pkg(
+      p_user_email IN user_info.user_email%TYPE,
+      p_profilename IN profile.profile_name%TYPE,
+      p_device_info IN profile.device_info%TYPE,
+      p_profile_type IN profile.profile_type%TYPE
+    );
+
+    PROCEDURE update_user_info (
+        p_user_id       IN user_info.user_id%TYPE,
+        p_user_zip_code IN user_info.user_zip_code%TYPE,
+        p_user_name     IN user_info.user_name%TYPE,
+        p_user_email    IN user_info.user_email%TYPE,
+        p_user_passcode IN user_info.user_passcode%TYPE
+    );
+    
+    PROCEDURE insert_user_app_catalog_pkg (
+      p_app_name            IN application.app_name%TYPE,
+      p_user_email          IN user_info.user_email%TYPE,
+      p_device_info         IN profile.device_info%TYPE,
+      p_install_policy_desc IN user_app_catalogue.install_policy_desc%TYPE
+    );
+    
+    PROCEDURE get_apps_for_profile(profile_id_in IN user_app_catalogue.profile_id%TYPE);
+    
+
     -- Procedure to post a review by user on app
     PROCEDURE post_review (
         p_app_name   IN application.app_name%TYPE,
@@ -46,12 +82,89 @@ CREATE OR REPLACE PACKAGE user_package AS
         p_user_id IN subscription.user_id%TYPE,
         p_app_id  IN subscription.app_id%TYPE
     );
-
-END user_package;
+END user_manager_pkg;
 /
 
+---------------Package Body -----------------------
 
-CREATE OR REPLACE PACKAGE BODY USER_PACKAGE AS
+CREATE OR REPLACE PACKAGE BODY user_manager_pkg
+IS
+    PROCEDURE select_user_info
+    IS
+    BEGIN
+        FOR user_rec IN (SELECT * FROM user_info)
+        LOOP
+            dbms_output.put_line(user_rec.user_id || ', ' || user_rec.user_zip_code || ', ' || user_rec.user_name || ', ' || user_rec.user_email || ', ' || user_rec.created_at || ', ' || user_rec.updated_at);
+        END LOOP;
+    END select_user_info;
+
+    PROCEDURE insert_user_info_pkg (
+        p_user_zip_code IN user_info.user_zip_code%TYPE,
+        p_user_name     IN user_info.user_name%TYPE,
+        p_user_email    IN user_info.user_email%TYPE,
+        p_user_passcode IN user_info.user_passcode%TYPE
+    )
+    IS
+    BEGIN
+        -- Calling the insert_user_info procedure defined in the separate file here
+        insert_user_info(p_user_zip_code, p_user_name, p_user_email, p_user_passcode);
+    END insert_user_info_pkg;
+    
+    PROCEDURE create_profile_pkg(
+    p_user_email IN user_info.user_email%TYPE,
+    p_profilename IN profile.profile_name%TYPE,
+    p_device_info IN profile.device_info%TYPE,
+    p_profile_type IN profile.profile_type%TYPE
+    )
+    IS
+    BEGIN
+        create_profile(p_user_email, p_profilename, p_device_info, p_profile_type);
+    END;
+
+    PROCEDURE update_user_info (
+        p_user_id       IN user_info.user_id%TYPE,
+        p_user_zip_code IN user_info.user_zip_code%TYPE,
+        p_user_name     IN user_info.user_name%TYPE,
+        p_user_email    IN user_info.user_email%TYPE,
+        p_user_passcode IN user_info.user_passcode%TYPE
+    )
+    IS
+    BEGIN
+        UPDATE user_info SET
+            user_zip_code = p_user_zip_code,
+            user_name = p_user_name,
+            user_email = p_user_email,
+            user_passcode = encrypt_password(p_user_passcode),
+            updated_at = sysdate
+        WHERE user_id = p_user_id;
+
+        dbms_output.put_line('User info updated successfully');
+        COMMIT;
+        EXCEPTION
+            WHEN OTHERS THEN
+                ROLLBACK;
+                dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
+    END create_profile_pkg;
+    
+    PROCEDURE insert_user_app_catalog_pkg(
+        p_app_name            IN application.app_name%TYPE,
+        p_user_email          IN user_info.user_email%TYPE,
+        p_device_info         IN profile.device_info%TYPE,
+        p_install_policy_desc IN user_app_catalogue.install_policy_desc%TYPE
+    )
+    IS
+    BEGIN
+        INSERT_USER_APP_CATALOGUE(p_app_name, p_user_email, p_device_info, p_install_policy_desc);
+    END;
+    
+    PROCEDURE get_apps_for_profile(profile_id_in IN user_app_catalogue.profile_id%TYPE) IS
+    BEGIN
+        FOR app_rec IN (SELECT * FROM user_app_catalogue WHERE profile_id = profile_id_in) LOOP
+            DBMS_OUTPUT.PUT_LINE(app_rec.catalogue_id || ', ' || app_rec.app_id || ', ' || app_rec.installed_version);
+        END LOOP;
+    END get_apps_for_profile;
+
+
     -- Procedure for posting a user review
     PROCEDURE post_review(
       p_app_name IN application.app_name%TYPE,
@@ -183,20 +296,19 @@ CREATE OR REPLACE PACKAGE BODY USER_PACKAGE AS
         CLOSE c_subscriptions;
     END get_subscriptions;
     
-    
-END USER_PACKAGE;
+END user_manager_pkg;
 /
 
+---------------Package Test -----------------------
+-- INSERT test --
+-- execute user_manager_pkg.insert_user_info_pkg(2119, 'John Doe', 'johndoe@example.com', 'password');
 
-EXECUTE USER_PACKAGE.post_review('WhatsApp', 'rishab@gmail.com', 4.3, 'This is an awesome review');
+-- execute user_manager_pkg.select_user_info;
 
-EXECUTE USER_PACKAGE.get_subscriptions(1, 15);
+-- execute user_manager_pkg.update_user_info(2, 2119, 'Orijit', 'ori@email.com', 'password`');
 
-execute USER_PACKAGE.add_billing_info('rishab@gmail.com', 'jaini', 'ABC12345', '255');
+-- execute user_manager_pkg.create_profile_pkg('ori@email.com','ori_profile','iOS device','public');
 
-execute USER_PACKAGE.get_user_payments(1);
+-- execute user_manager_pkg.insert_user_app_catalog_pkg('Facebook', 'rishab@gmail.com', 'android device', 'This is sample install policy');
 
-execute USER_PACKAGE.update_review(10000007, 3.1, 'App not working');
-
-execute USER_PACKAGE.buy_subscription('WhatsApp', 'rishab@gmail.com', 'In-app Goodies', 'One Time', TO_DATE('2023-05-11', 'YYYY-MM-DD'), 10.5);
-
+-- execute user_manager_pkg.get_apps_for_profile(1000000);

@@ -1,8 +1,0 @@
-Procedures:
-- STORE_ADMIN no access for payments
-    - if store admin runs create_payments procedure, it should error dbms_output
-
-- developer_manger for other procedures, you don't have priviledge error
-    - reviews and app_category can only view
-
-- user_manager only view on user_app_catalogue and subscription
