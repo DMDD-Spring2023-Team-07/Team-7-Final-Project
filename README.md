@@ -6,18 +6,29 @@
 
 # Files:
 1.	1_Security_Rules.sql
-2.	1_Tables_Sequences_and_Inserts.sql
-3.	2_Sequences.sql
-4.	3_Tables_Triggers.sql
-5.	4_Functions.sql
-6.	5_Procedures.sql
-7.	6_Packages.sql
-8.	6_Packages_DFD_2.sql
-9.	6_Packages_DFD_3_ADMIN.sql
-10.	6_Packages_DFD_3_DEVELOPER.sql
-11.	7_Execution_Packages_Procedures.sql
-12.	8_Views.sql
-13.	12_Reports.sql
+- 
+2.	2_Sequences.sql
+- 
+3.	3_Tables_And_Inserts.sql
+- 
+4.	4_Functions.sql
+- 
+5.	5_Views.sql
+- 
+6.	6_Triggers.sql
+- 
+7.	7_Common_Procedures.sql
+- 
+8.	8_DB_ADMIN_Package.sql
+- 
+9.	9_Developer_Manager_Package.sql
+- 
+10.	10_User_Manager_Package.sql
+- 
+12.	12_Reports.sql
+- 
+13. 13_Test_Cases.sql
+- 
 
 # Description and security rules for the users:
 DB_ADMIN : ( Username : DBADMIN , Password :  QueryNinjas#6210 )
