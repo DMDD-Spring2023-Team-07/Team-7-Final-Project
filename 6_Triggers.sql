@@ -17,15 +17,15 @@ END;
 
 -- UPDATE IS_UPDATE_AVAILABLE IN USER_APP_CATALOGUE 
 -- drop trigger update_available_update_flag;
-CREATE OR REPLACE TRIGGER update_available_update_flag
-AFTER UPDATE ON application
-FOR EACH ROW
-BEGIN
-    UPDATE user_app_catalogue 
-    SET is_update_available = 1
-    WHERE app_id = :new.app_id;
-END;
-/
+-- CREATE OR REPLACE TRIGGER update_available_update_flag
+-- AFTER UPDATE ON application
+-- FOR EACH ROW
+-- BEGIN
+--     UPDATE user_app_catalogue 
+--     SET is_update_available = 1
+--     WHERE app_id = :new.app_id;
+-- END;
+-- /
 
 
 -- UPDATE NUMBER_OF_APPS IN APP_CATEGORY 
