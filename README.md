@@ -4,6 +4,21 @@
 1. Post Login excute 'security_rules.sql' : This file creates users , sessions and grants access
 2. Then excute 'App_Store_Management.sql' : with credentials ( Username : DB_ADMIN , Password :  QueryNinjas#6210) Which contains both DDL and DML scripts for the project as admin
 
+# Files:
+1.	1_Security_Rules.sql
+2.	1_Tables_Sequences_and_Inserts.sql
+3.	2_Sequences.sql
+4.	3_Tables_Triggers.sql
+5.	4_Functions.sql
+6.	5_Procedures.sql
+7.	6_Packages.sql
+8.	6_Packages_DFD_2.sql
+9.	6_Packages_DFD_3_ADMIN.sql
+10.	6_Packages_DFD_3_DEVELOPER.sql
+11.	7_Execution_Packages_Procedures.sql
+12.	8_Views.sql
+13.	12_Reports.sql
+
 # Description and security rules for the users:
 DB_ADMIN : ( Username : DBADMIN , Password :  QueryNinjas#6210 )
 Complete Access -> All Tables
