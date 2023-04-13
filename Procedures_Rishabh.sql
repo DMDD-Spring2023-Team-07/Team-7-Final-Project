@@ -713,7 +713,7 @@ BEGIN
     -- Get the profile count from the PROFILE table
     SELECT COUNT(*) INTO v_profile_count
     FROM profile
-    WHERE device_info = LOWER(p_device_info) AND user_id = v_user_id;
+    WHERE LOWER(device_info) = LOWER(p_device_info) AND user_id = v_user_id;
     
     IF v_profile_count = 0 THEN
         dbms_output.put_line('User profile count - ' || v_profile_count);
