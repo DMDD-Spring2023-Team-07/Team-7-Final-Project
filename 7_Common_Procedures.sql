@@ -257,8 +257,8 @@ BEGIN
             RAISE_APPLICATION_ERROR(-20001, 'Developer name is required');
         END IF;
         
-        IF p_developer_email IS NULL OR TRIM(p_developer_email) = '' THEN
-            RAISE_APPLICATION_ERROR(-20002, 'Developer email is required');
+        IF p_developer_email IS NULL OR TRIM(p_developer_email) = '' OR NOT regexp_like(p_developer_email, '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$') THEN
+            RAISE_APPLICATION_ERROR(-20002, 'Invalid developer email');
         END IF;
         
         IF p_developer_password IS NULL OR TRIM(p_developer_password) = '' THEN
@@ -334,9 +334,9 @@ BEGIN
         v_category_type := INITCAP(p_category_type);
 
         -- Check if category_type already exists in app_category table
-        SELECT category_id INTO v_category_id FROM app_category WHERE category_type = v_category_type;
+        SELECT count(*) INTO v_category_id FROM app_category WHERE category_type = v_category_type;
         
-        IF v_category_id IS NOT NULL THEN
+        IF v_category_id > 0 THEN
             RAISE_APPLICATION_ERROR(-20003, 'Category type already exists');
         END IF;
         

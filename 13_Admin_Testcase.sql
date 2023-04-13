@@ -1,27 +1,27 @@
 set serveroutput on
 
--- Advertisement with ad id not found
-EXECUTE DB_ADMIN.ADMIN_PACKAGE.delete_advertisement(1000000000);
+-- Delete an Advertisement with ad id
+EXECUTE DB_ADMIN.ADMIN_PACKAGE.delete_advertisement(250);
 
 
--- Error deleting advertisement
-EXECUTE DB_ADMIN.ADMIN_PACKAGE.delete_advertisement('test');
-
-
--- Publish an ad
+-- Publish an ad with incorrect app name
 EXECUTE DB_ADMIN.ADMIN_PACKAGE.publish_ad('ad test', 'test', 500);
 
 
+-- Publish an ad with correct app name
+EXECUTE DB_ADMIN.ADMIN_PACKAGE.publish_ad('Shazam', 'test', 500);
+
+
 -- Get all ads
-EXECUTE DB_ADMIN.ADMIN_PACKAGE.get_advertisements_by_app_id(1);
+EXECUTE DB_ADMIN.ADMIN_PACKAGE.get_advertisements_by_app_id(10);
 
 
 -- Update advertisement
-EXECUTE DB_ADMIN.ADMIN_PACKAGE.update_advertisement('ad test', 'test', 1000);
+EXECUTE DB_ADMIN.ADMIN_PACKAGE.update_advertisement(10, 'test', 1000);
 
 
 -- Add App Category
-EXECUTE DB_ADMIN.ADMIN_PACKAGE.add_app_category('test type', 'Test category description');
+EXECUTE DB_ADMIN.ADMIN_PACKAGE.add_app_category('Health', 'Test category description');
 
 
 -- Update App Category Description
@@ -29,7 +29,7 @@ EXECUTE DB_ADMIN.ADMIN_PACKAGE.update_category_description('test type', 'Test ca
 
 
 -- Add Pincode
-EXECUTE DB_ADMIN.ADMIN_PACKAGE.add_new_pincode(1000, 'test country', 'test state', 'test city');
+EXECUTE DB_ADMIN.ADMIN_PACKAGE.add_new_pincode(200023, 'test country', 'test state', 'test city');
 
 
 -- Sign Up developer
