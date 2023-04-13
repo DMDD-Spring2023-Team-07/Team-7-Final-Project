@@ -239,7 +239,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'DEVELOPER_MANAGER') THEN
     --------------------------------------------------------------------------------------------------------------
         -- Check for null or empty values
         IF p_developer_name IS NULL OR TRIM(p_developer_name) = '' THEN
@@ -310,7 +310,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN') THEN
     ---------------------------------------------------------------------------------------------------------------
         IF p_category_description IS NULL OR LENGTH(p_category_description) = 0 THEN
             RAISE_APPLICATION_ERROR(-20001, 'Category description cannot be null or empty');
@@ -369,7 +369,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'DEVELOPER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         -- Check for null or empty values
         IF p_developer_email IS NULL OR TRIM(p_developer_email) = '' THEN
@@ -501,7 +501,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'DEVELOPER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         -- Check for null or empty values
         IF p_app_name IS NULL OR TRIM(p_app_name) = '' THEN
@@ -713,7 +713,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN') THEN
     ---------------------------------------------------------------------------------------------------------------
         IF p_install_policy_desc IS NULL THEN
             RAISE_APPLICATION_ERROR(-20001, 'Install policy cannot be null');
@@ -823,7 +823,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'USER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         -- Check if the name_on_card, card_number, and cvv parameters are not null 
         IF p_name_on_card is null then
@@ -888,7 +888,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'DEVELOPER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         -- Check for null and empty on ad_details
         IF p_ad_details IS NULL OR TRIM(p_ad_details) = '' THEN
