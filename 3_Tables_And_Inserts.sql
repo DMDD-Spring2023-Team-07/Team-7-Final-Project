@@ -360,7 +360,7 @@ INSERT INTO PAYMENTS(Billing_ID, User_ID, Name_On_Card, Card_Number, CVV, Create
 VALUES(BILLING_SEQ.NEXTVAL,USER_SEQ.CURRVAL, 'Jane Smith', 2347598678904004, 5772, TO_DATE('2022-06-28', 'YYYY-MM-DD'));
 
 INSERT INTO DEVELOPER (Developer_ID, Developer_Name, Developer_Email, Developer_Password, Organization_Name, License_Number, License_Description, License_Date)
-VALUES(DEVELOPER_SEQ.NEXTVAL, 'Jeniffer Lawrence', 'JLaw@example.com', 'letmein', 'Globex Corp.', 67890, 'Limited license', TO_DATE('2023-06-30','YYYY-MM-DD'));
+VALUES(DEVELOPER_SEQ.NEXTVAL, 'Jeniffer Lawrence', 'jlaw@example.com', 'letmein', 'Globex Corp.', 67890, 'Limited license', TO_DATE('2023-06-30','YYYY-MM-DD'));
 
 INSERT INTO APPLICATION (App_ID, Developer_ID, Category_ID, App_Name, App_Size, App_Version, App_Language, Download_Count, Target_Age, Supported_OS, Overall_Rating, APP_CREATE_DT)
 VALUES (APPLICATION_SEQ.NEXTVAL, DEVELOPER_SEQ.CURRVAL,CATEGORY_SEQ.CURRVAL, 'Instagram', 100, 21, 'English', 10000, 21, 'iOS', 6, TO_DATE('2022-03-06', 'YYYY-MM-DD'));
@@ -396,7 +396,7 @@ INSERT INTO PAYMENTS(Billing_ID, User_ID, Name_On_Card, Card_Number, CVV, Create
 VALUES(BILLING_SEQ.NEXTVAL,USER_SEQ.CURRVAL, 'Bob Heather Johnson', 5697234589076009, 2349, TO_DATE('2022-08-13', 'YYYY-MM-DD'));
 
 INSERT INTO DEVELOPER (Developer_ID, Developer_Name, Developer_Email, Developer_Password, Organization_Name, License_Number, License_Description, License_Date)
-VALUES(DEVELOPER_SEQ.NEXTVAL, 'Mark Rhonson', 'Mark.Rhonson@example.com', 'securepassword', 'Stark Industries', 24680, 'Full license', TO_DATE('2024-09-15','YYYY-MM-DD'));
+VALUES(DEVELOPER_SEQ.NEXTVAL, 'Mark Rhonson', 'mark.rhonson@example.com', 'securepassword', 'Stark Industries', 24680, 'Full license', TO_DATE('2024-09-15','YYYY-MM-DD'));
 
 INSERT INTO APPLICATION (App_ID, Developer_ID, Category_ID, App_Name, App_Size, App_Version, App_Language, Download_Count, Target_Age, Supported_OS, Overall_Rating, APP_CREATE_DT)
 VALUES (APPLICATION_SEQ.NEXTVAL, DEVELOPER_SEQ.CURRVAL,CATEGORY_SEQ.CURRVAL, 'LinkedIN', 30, 24, 'English', 300, 35, 'iOS', 3, TO_DATE('2022-05-28', 'YYYY-MM-DD'));
@@ -432,7 +432,7 @@ INSERT INTO PAYMENTS(Billing_ID, User_ID, Name_On_Card, Card_Number, CVV, Create
 VALUES(BILLING_SEQ.NEXTVAL,USER_SEQ.CURRVAL, 'Alice Marie Brown', 9009582614056879, 9807, TO_DATE('2022-07-13', 'YYYY-MM-DD'));
 
 INSERT INTO DEVELOPER (Developer_ID, Developer_Name, Developer_Email, Developer_Password, Organization_Name, License_Number, License_Description, License_Date)
-VALUES(DEVELOPER_SEQ.NEXTVAL, 'David Guetta', 'Guetta.Dave@example.com', 'securepassword', 'Wayne Enterprises', 13579, 'Full license', TO_DATE('2025-02-28','YYYY-MM-DD'));
+VALUES(DEVELOPER_SEQ.NEXTVAL, 'David Guetta', 'guetta.dave@example.com', 'securepassword', 'Wayne Enterprises', 13579, 'Full license', TO_DATE('2025-02-28','YYYY-MM-DD'));
 
 INSERT INTO APPLICATION (App_ID, Developer_ID, Category_ID, App_Name, App_Size, App_Version, App_Language, Download_Count, Target_Age, Supported_OS, Overall_Rating, APP_CREATE_DT)
 VALUES (APPLICATION_SEQ.NEXTVAL, DEVELOPER_SEQ.CURRVAL,CATEGORY_SEQ.CURRVAL, 'Snapchat', 200, 3, 'English', 3000, 16, 'iOS', 7, TO_DATE('2022-07-18', 'YYYY-MM-DD'));
