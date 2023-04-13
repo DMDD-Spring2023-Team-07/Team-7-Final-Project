@@ -20,23 +20,23 @@ Execution Steps:
 Note: All the steps needs to be run as 'Clound_Wallet_Admin' unless until mentioned otherwise.
 
 1. Execute '1_Security_Rules' as 'Cloud_Wallet_Admin'
-1.5.Switch user credentials to for DB_ADMIN to connect
-2. Execute '2_Sequences" as 'DB_ADMIN'
-3. Execute '3_Table_and_Inserts' as 'DB_ADMIN'
-4. Execute '4_Functions' as 'DB_ADMIN'
-5. Execute '5_Views' as 'DB_ADMIN'
-6. Execute '6_Triggers' as 'DB_ADMIN'
-7. Execute '7_Common_Procedures' as 'DB_ADMIN'
-8. Execute '8_DB_ADMIN_Package' as 'DB_ADMIN'
-9. Execute '9_Developer_Manager_Package' as 'DB_ADMIN'
-10. Execute '10_User_Manager_Package' as 'DB_ADMIN'
-10.5 Switch user credentials to for DEVELOPER_MANAGER to connect
-11. Execute '11_Developer_Testcase' as 'DEVELOPER_MANAGER'
-12. Switch user credentials to for USER_MANAGER to connect
-13. Execute '12_User_Testcase' as 'USER_MANAGER'
-   Switch user credentials to for DB_ADMIN to connect
-13. Execute '13_Admin_Testcase' as 'DB_ADMIN'
-14. Execute '14_Reports' as 'DB_ADMIN'
+2. Switch user credentials to for DB_ADMIN to connect
+3. Execute '2_Sequences" as 'DB_ADMIN'
+4. Execute '3_Table_and_Inserts' as 'DB_ADMIN'
+5. Execute '4_Functions' as 'DB_ADMIN'
+6. Execute '5_Views' as 'DB_ADMIN'
+7. Execute '6_Triggers' as 'DB_ADMIN'
+8. Execute '7_Common_Procedures' as 'DB_ADMIN'
+9. Execute '8_DB_ADMIN_Package' as 'DB_ADMIN'
+10. Execute '9_Developer_Manager_Package' as 'DB_ADMIN'
+11. Execute '10_User_Manager_Package' as 'DB_ADMIN'
+12. Switch user credentials to for DEVELOPER_MANAGER to connect
+13. Execute '11_Developer_Testcase' as 'DEVELOPER_MANAGER'
+14. Switch user credentials to for USER_MANAGER to connect
+15. Execute '12_User_Testcase' as 'USER_MANAGER'
+16. Switch user credentials to for DB_ADMIN to connect
+17. Execute '13_Admin_Testcase' as 'DB_ADMIN'
+18. Execute '14_Reports' as 'DB_ADMIN'
 
 # Files:
 ### 1_Security_Rules.sql
