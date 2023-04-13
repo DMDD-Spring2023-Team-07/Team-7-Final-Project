@@ -30,19 +30,27 @@
   - Example: APP_STORE_USER_USAGE
 - Grants access for views to existing users.
 ### 6_Triggers.sql
-- 
+- Creating triggers.
+  - Example: Update download count after a user downloads an app.
 ### 7_Common_Procedures.sql
-- 
+- Creating all the common procedures. These procedures are restricted by user access.
+  - Example: Inserting User Info
 ### 8_DB_ADMIN_Package.sql
-- 
+- Create admin package with required procedures based on the admin role.
+- Grant execute privileges on this package to the admin.
 ### 9_Developer_Manager_Package.sql
-- 
+- Create admin package with required procedures based on the developer_manager role.
+- Grant execute privileges on this package to the developer_manager.
 ### 10_User_Manager_Package.sql
-- 
-### 12_Reports.sql
-- 
-### 13_Test_Cases.sql
-- 
+- Create admin package with required procedures based on the user_manager role.
+- Grant execute privileges on this package to the user_manager.
+### 11_Developer_Testcase.sql
+- Testing examples and expected outputs for the developer_package.
+  - Example: Publish Application
+### 12_Admin_Testcase.sql
+- Testing examples and expected outputs for the admin_package.
+  - Example: Add App Category
+
 
 # Description and security rules for the users:
 DB_ADMIN : ( Username : DBADMIN , Password :  QueryNinjas#6210 )
