@@ -6,11 +6,22 @@
 
 # Files:
 1.	1_Security_Rules.sql
-- 
+- Cleans up old user sessions and users.
+- Creates new users.
+  - Example: DB_ADMIN
+- Grants these new users their respective permissions.
+  - Grant create view to DB_ADMIN
 2.	2_Sequences.sql
-- 
+- Cleans up existing sequences.
+- Creates new sequences for certain primary keys from the tables.
+  - Example: USER_SEQ
 3.	3_Tables_And_Inserts.sql
-- 
+- Cleans up existing tables.
+- Creates new tables.
+  - Example: USER_INFO
+- Grants access for created users.
+  - Example: GRANT SELECT, INSERT, UPDATE, DELETE ON DB_ADMIN.ADVERTISEMENT TO STORE_ADMIN;
+- Inserts dummy test data into these tables
 4.	4_Functions.sql
 - 
 5.	5_Views.sql
