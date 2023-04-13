@@ -47,10 +47,10 @@
 ### 11_Developer_Testcase.sql
 - Testing examples and expected outputs for the developer_package.
   - Example: Publish Application
-### 11_User_Testcase.sql
+### 12_User_Testcase.sql
 - Testing examples and expected outputs for the user_manager_package.
   - Example: Insert user info
-### 12_Admin_Testcase.sql
+### 13_Admin_Testcase.sql
 - Testing examples and expected outputs for the admin_package.
   - Example: Add App Category
 ### 13_Additional_Test_Cases.sql
@@ -75,6 +75,9 @@ SELECT -> USER_APP_CATALOGUE,SUBSCRIPTION
 SELECT, INSERT, UPDATE -> USER,PAYMENTS,PINCODE,PROFILE,REVIEWS 
 
 ***The updated view descriptions for the views that we have included in the code are below
+
+# ERD Diagram:
+![image](https://user-images.githubusercontent.com/47637485/231647532-80e6c821-17db-46f6-89e1-2acd61478514.png)
 
 # View Descriptions:
 Our project contains the 6 views below, each of which will help address specific problems and provide a clear overview of the app store. These views will also be relevant for the end-user and for business reporting. 
