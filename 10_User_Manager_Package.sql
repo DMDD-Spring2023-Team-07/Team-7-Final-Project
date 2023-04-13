@@ -119,7 +119,7 @@ IS
     IS
     BEGIN
         create_profile(p_user_email, p_profilename, p_device_info, p_profile_type);
-    END;
+    END create_profile_pkg;
 
     PROCEDURE update_user_info (
         p_user_id       IN user_info.user_id%TYPE,
@@ -144,7 +144,7 @@ IS
             WHEN OTHERS THEN
                 ROLLBACK;
                 dbms_output.put_line('Error: ' || sqlcode || ' - ' || sqlerrm);
-    END create_profile_pkg;
+    END update_user_info;
     
     PROCEDURE insert_user_app_catalog_pkg(
         p_app_name            IN application.app_name%TYPE,

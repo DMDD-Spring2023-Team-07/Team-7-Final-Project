@@ -34,7 +34,7 @@ CREATE OR REPLACE TRIGGER update_number_of_apps
 AFTER insert ON application
 FOR EACH ROW
 BEGIN
-    UPDATE number_of_apps 
+    UPDATE app_category 
     SET number_of_apps = number_of_apps + 1
     WHERE category_id = :new.category_id;
 END;

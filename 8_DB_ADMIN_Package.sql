@@ -64,10 +64,7 @@ CREATE OR REPLACE PACKAGE ADMIN_PACKAGE AS
         p_developer_name IN developer.developer_name%TYPE,
         p_developer_email IN developer.developer_email%TYPE,
         p_developer_password IN developer.developer_password%TYPE,
-        p_organization_name IN developer.organization_name%TYPE,
-        p_license_number IN developer.license_number%TYPE,
-        p_license_description IN developer.license_description%TYPE,
-        p_license_date IN developer.license_date%TYPE
+        p_organization_name IN developer.organization_name%TYPE
     );
     
     
