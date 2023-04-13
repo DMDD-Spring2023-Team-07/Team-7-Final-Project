@@ -37,3 +37,6 @@ EXECUTE DB_ADMIN.DEVELOPER_PACKAGE.publish_ad('TikTok', 'BINGO20', 10.5);
 
 -- Get app ads
 EXECUTE DB_ADMIN.DEVELOPER_PACKAGE.get_advertisements_by_app_id(15);
+
+-- Cannot run this testcase since developer does not have access to user_info table
+execute DB_ADMIN.user_manager_pkg.update_user_info(2, 2119, 'Orijit', 'ori@email.com', 'password');

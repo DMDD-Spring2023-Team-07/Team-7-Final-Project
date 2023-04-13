@@ -173,6 +173,7 @@ IS
     l_user_id user_info.user_id%TYPE;
     l_profile_id profile.profile_id%TYPE;
     current_user varchar(50);
+    v_profile_count NUMBER;
 BEGIN
     -- Restrict User Access
     select user into current_user from dual;
@@ -202,7 +203,17 @@ BEGIN
             RAISE_APPLICATION_ERROR(-20004, 'Profile type cannot be null or empty');
         END IF;
         
+        SELECT COUNT(*) INTO v_profile_count
+        FROM profile
+        WHERE device_info = LOWER(p_device_info) AND user_id = l_user_id;
         
+        
+        IF v_profile_count > 0 THEN
+            dbms_output.put_line('User profile count - ' || v_profile_count);
+            RAISE_APPLICATION_ERROR(-20012, 'User profile already exists');
+        END IF;
+        
+
         -- Insert the new row into the profile table
         INSERT INTO profile(profile_id, user_id, profile_name, device_info, profile_type, created_at, updated_at)
         VALUES(PROFILE_SEQ.NEXTVAL, l_user_id, INITCAP(p_profilename), LOWER(p_device_info), p_profile_type, SYSDATE, SYSDATE);
@@ -713,7 +724,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         IF p_install_policy_desc IS NULL THEN
             RAISE_APPLICATION_ERROR(-20001, 'Install policy cannot be null');
@@ -752,7 +763,7 @@ BEGIN
         -- Get the profile count from the PROFILE table
         SELECT COUNT(*) INTO v_profile_count
         FROM profile
-        WHERE device_info = LOWER(p_device_info) AND user_id = v_user_id;
+        WHERE LOWER(device_info) = LOWER(p_device_info) AND user_id = v_user_id;
         
         IF v_profile_count = 0 THEN
             dbms_output.put_line('User profile count - ' || v_profile_count);

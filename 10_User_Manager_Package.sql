@@ -299,6 +299,9 @@ IS
 END user_manager_pkg;
 /
 
+GRANT EXECUTE ON user_manager_pkg TO USER_MANAGER;
+
+
 ---------------Package Test -----------------------
 -- INSERT test --
 -- execute user_manager_pkg.insert_user_info_pkg(2119, 'John Doe', 'johndoe@example.com', 'password');
