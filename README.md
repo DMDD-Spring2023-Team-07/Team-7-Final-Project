@@ -47,9 +47,16 @@
 ### 11_Developer_Testcase.sql
 - Testing examples and expected outputs for the developer_package.
   - Example: Publish Application
+### 11_User_Testcase.sql
+- Testing examples and expected outputs for the user_manager_package.
+  - Example: Insert user info
 ### 12_Admin_Testcase.sql
 - Testing examples and expected outputs for the admin_package.
   - Example: Add App Category
+### 13_Additional_Test_Cases.sql
+- General test cases relating to tableinsert, view, etc. access.
+### 14_Reports.sql
+- Same queries as the views, since we designed the views in a way that slect * from a view would give you a report.
 
 
 # Description and security rules for the users:
