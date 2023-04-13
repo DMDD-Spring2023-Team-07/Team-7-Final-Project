@@ -12,7 +12,7 @@ DECLARE
 'PROFILE_SEQ',
 'REVIEW_SEQ',
 'CATALOGUE_SEQ',
-'LICENSE_SEQ'
+'LICENSE_SEQ',
 'ADVERTISEMENT_SEQ');
     v_sequence_exists VARCHAR(1) := 'Y';
     v_sql          VARCHAR(2000);

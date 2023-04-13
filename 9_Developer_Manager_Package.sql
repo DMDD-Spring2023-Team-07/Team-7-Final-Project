@@ -115,12 +115,12 @@ END DEVELOPER_PACKAGE;
 
 
 
-EXECUTE DEVELOPER_PACKAGE.publish_application('jhon@northeastern.edu', 'Health', 'TikTok', 90, 'English', 10, 'iOS');
+-- EXECUTE DEVELOPER_PACKAGE.publish_application('jhon@northeastern.edu', 'Health', 'TikTok', 90, 'English', 10, 'iOS');
 
-EXECUTE DEVELOPER_PACKAGE.get_app_categories;
+-- EXECUTE DEVELOPER_PACKAGE.get_app_categories;
 
-EXECUTE DEVELOPER_PACKAGE.get_advertisements_by_app_id(15);
+-- EXECUTE DEVELOPER_PACKAGE.get_advertisements_by_app_id(15);
 
-EXECUTE DEVELOPER_PACKAGE.publish_ad('Whatsapp', 'BINGO50', 10.5);
+-- EXECUTE DEVELOPER_PACKAGE.publish_ad('Whatsapp', 'BINGO50', 10.5);
 
 

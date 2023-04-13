@@ -83,7 +83,7 @@ BEGIN
     IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER') THEN
         ---------------------------------------------------------------------------------------------------------------
         -- Check for
-        IF p_zip_code IS NULL OR p_zip_code = 0 THEN
+        IF p_user_zip_code IS NULL OR p_user_zip_code = 0 THEN
             RAISE_APPLICATION_ERROR(-20001, 'Invalid zipcode');
         END IF;
 
