@@ -5,19 +5,44 @@
 2. Then excute 'App_Store_Management.sql' : with credentials ( Username : DB_ADMIN , Password :  QueryNinjas#6210) Which contains both DDL and DML scripts for the project as admin
 
 # Files:
-1.	1_Security_Rules.sql
-2.	1_Tables_Sequences_and_Inserts.sql
-3.	2_Sequences.sql
-4.	3_Tables_Triggers.sql
-5.	4_Functions.sql
-6.	5_Procedures.sql
-7.	6_Packages.sql
-8.	6_Packages_DFD_2.sql
-9.	6_Packages_DFD_3_ADMIN.sql
-10.	6_Packages_DFD_3_DEVELOPER.sql
-11.	7_Execution_Packages_Procedures.sql
-12.	8_Views.sql
-13.	12_Reports.sql
+### 1_Security_Rules.sql
+- Cleans up old user sessions and users.
+- Creates new users.
+  - Example: DB_ADMIN
+- Grants these new users their respective permissions.
+  - Grant create view to DB_ADMIN
+### 2_Sequences.sql
+- Cleans up existing sequences.
+- Creates new sequences for certain primary keys from the tables.
+  - Example: USER_SEQ
+### 3_Tables_And_Inserts.sql
+- Cleans up existing tables.
+- Creates new tables.
+  - Example: USER_INFO
+- Grants access for created users.
+  - Example: GRANT SELECT, INSERT, UPDATE, DELETE ON DB_ADMIN.ADVERTISEMENT TO STORE_ADMIN;
+- Inserts dummy test data into these tables
+### 4_Functions.sql
+- Creates function for encrypting passwords and credit cards using DBMS_CRYPTO.
+### 5_Views.sql
+- Cleans up existing views.
+- Creates new views (see below).
+  - Example: APP_STORE_USER_USAGE
+- Grants access for views to existing users.
+### 6_Triggers.sql
+- 
+### 7_Common_Procedures.sql
+- 
+### 8_DB_ADMIN_Package.sql
+- 
+### 9_Developer_Manager_Package.sql
+- 
+### 10_User_Manager_Package.sql
+- 
+### 12_Reports.sql
+- 
+### 13_Test_Cases.sql
+- 
 
 # Description and security rules for the users:
 DB_ADMIN : ( Username : DBADMIN , Password :  QueryNinjas#6210 )

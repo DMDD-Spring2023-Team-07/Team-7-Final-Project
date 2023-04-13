@@ -369,7 +369,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'DEVELOPER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER', 'DEVELOPER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         -- Check for null or empty values
         IF p_developer_email IS NULL OR TRIM(p_developer_email) = '' THEN
@@ -888,7 +888,7 @@ BEGIN
     -- Restrict User Access
     select user into current_user from dual;
 
-    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'DEVELOPER_MANAGER') THEN
+    IF current_user in ('DB_ADMIN', 'STORE_ADMIN', 'USER_MANAGER', 'DEVELOPER_MANAGER') THEN
     ---------------------------------------------------------------------------------------------------------------
         -- Check for null and empty on ad_details
         IF p_ad_details IS NULL OR TRIM(p_ad_details) = '' THEN
@@ -913,7 +913,7 @@ BEGIN
         -- Get the app_id from the application table using app_name
         SELECT app_id INTO v_app_id
         FROM application
-        WHERE app_name = p_app_name;
+        WHERE app_name = INITCAP(p_app_name);
         
         
         -- Get the developer_id from the developer table using developer_email

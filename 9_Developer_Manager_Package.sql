@@ -114,10 +114,15 @@ END DEVELOPER_PACKAGE;
 /
 
 
+GRANT EXECUTE ON DEVELOPER_PACKAGE TO DEVELOPER_MANAGER;
+GRANT EXECUTE ON insert_application TO DEVELOPER_MANAGER;
+
+
+
 
 -- EXECUTE DEVELOPER_PACKAGE.publish_application('jhon@northeastern.edu', 'Health', 'TikTok', 90, 'English', 10, 'iOS');
 
--- EXECUTE DEVELOPER_PACKAGE.get_app_categories;
+EXECUTE DEVELOPER_PACKAGE.get_app_categories;
 
 -- EXECUTE DEVELOPER_PACKAGE.get_advertisements_by_app_id(15);
 
