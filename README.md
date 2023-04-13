@@ -20,7 +20,7 @@ Execution Steps:
 Note: All the steps needs to be run as 'Clound_Wallet_Admin' unless until mentioned otherwise.
 
 1. Execute '1_Security_Rules' as 'Cloud_Wallet_Admin'
-   Switch user credentials to for DB_ADMIN to connect
+1.5.Switch user credentials to for DB_ADMIN to connect
 2. Execute '2_Sequences" as 'DB_ADMIN'
 3. Execute '3_Table_and_Inserts' as 'DB_ADMIN'
 4. Execute '4_Functions' as 'DB_ADMIN'
@@ -30,10 +30,10 @@ Note: All the steps needs to be run as 'Clound_Wallet_Admin' unless until mentio
 8. Execute '8_DB_ADMIN_Package' as 'DB_ADMIN'
 9. Execute '9_Developer_Manager_Package' as 'DB_ADMIN'
 10. Execute '10_User_Manager_Package' as 'DB_ADMIN'
-   Switch user credentials to for DEVELOPER_MANAGER to connect
+10.5 Switch user credentials to for DEVELOPER_MANAGER to connect
 11. Execute '11_Developer_Testcase' as 'DEVELOPER_MANAGER'
-   Switch user credentials to for USER_MANAGER to connect
-12. Execute '12_User_Testcase' as 'USER_MANAGER'
+12. Switch user credentials to for USER_MANAGER to connect
+13. Execute '12_User_Testcase' as 'USER_MANAGER'
    Switch user credentials to for DB_ADMIN to connect
 13. Execute '13_Admin_Testcase' as 'DB_ADMIN'
 14. Execute '14_Reports' as 'DB_ADMIN'
